@@ -1,81 +1,27 @@
-let companies = [
-    { 
-        id: "al-madina",
-        name: "Al-Madina Enterprises", 
-        vendorType: "AGPR", 
-        vendorNo: "30368984", 
-        ntn: "2128115-7", 
-        stn: "1700212811518", 
-        srb: "S1700212811518",
-        phone: "0300-2216873", 
-        address: "B-26, 4th Floor Faraz Avenue, Block-20 Gulistan-e-Jauhar, Karachi", 
-        accountNo: "1234567890",
-        iban: "PK36MEZN0001234567890",
-        email: "almadina@example.com",
-        cnic: "42101-1234567-1",
-        billSeq: 12489, 
-        taxType: "GST", 
-        taxRate: 18,
-        allowTaxToggle: true 
-    },
-    { 
-        id: "shaheen",
-        name: "Shaheen Enterprises", 
-        vendorType: "AGPR", vendorNo: "40912841", ntn: "3182941-2", stn: "1700318294119", srb: "S1700318294119",
-        phone: "0300-1234567", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "",
-        billSeq: 5001, taxType: "SST", taxRate: 15, allowTaxToggle: false 
-    },
-    { 
-        id: "hayah",
-        name: "HAYAH ENTERPRISES", 
-        vendorType: "AGPR", vendorNo: "51092834", ntn: "4192834-5", stn: "1700419283411", srb: "S1700419283411",
-        phone: "0321-9876543", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "",
-        billSeq: 3001, taxType: "SST", taxRate: 15, allowTaxToggle: false 
-    },
-    { 
-        id: "comzon",
-        name: "Comzon", 
-        vendorType: "AGPR", vendorNo: "61209384", ntn: "5129384-6", stn: "1700512938412", srb: "S1700512938412",
-        phone: "0333-1122334", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "",
-        billSeq: 1001, taxType: "GST", taxRate: 18, allowTaxToggle: false 
-    },
-    { 
-        id: "al-noor",
-        name: "Al Noor", 
-        vendorType: "AGPR", vendorNo: "71829304", ntn: "6182930-7", stn: "1700618293013", srb: "S1700618293013",
-        phone: "0345-5566778", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "",
-        billSeq: 2001, taxType: "SST", taxRate: 15, allowTaxToggle: false 
-    },
-    { 
-        id: "al-mehran",
-        name: "Al Mehran", 
-        vendorType: "AGPR", vendorNo: "81920394", ntn: "7192039-8", stn: "1700719203914", srb: "S1700719203914",
-        phone: "0312-4455667", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "",
-        billSeq: 4001, taxType: "SST", taxRate: 15, allowTaxToggle: false 
-    },
-    { 
-        id: "rizwan",
-        name: "Rizwan Autoes", 
-        vendorType: "AGPR", vendorNo: "91029384", ntn: "8102938-9", stn: "1700810293815", srb: "S1700810293815",
-        phone: "0301-7788990", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "",
-        billSeq: 6001, taxType: "SST", taxRate: 15, allowTaxToggle: false 
-    },
-    { 
-        id: "asra",
-        name: "Asra Traders", 
-        vendorType: "AGPR", vendorNo: "10928374", ntn: "9092837-0", stn: "1700909283716", srb: "S1700909283716",
-        phone: "0302-3344556", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "",
-        billSeq: 7001, taxType: "SST", taxRate: 15, allowTaxToggle: false 
-    }
+let defaultCompanies = [
+    { id: "al-madina", name: "Al-Madina Enterprises", vendorType: "AGPR", vendorNo: "30368984", ntn: "2128115-7", stn: "1700212811518", srb: "S1700212811518", phone: "0300-2216873", address: "B-26, 4th Floor Faraz Avenue, Block-20 Gulistan-e-Jauhar, Karachi", accountNo: "1234567890", iban: "PK36MEZN0001234567890", email: "almadina@example.com", cnic: "42101-1234567-1", billSeq: 12489, taxType: "GST", taxRate: 18, allowTaxToggle: true },
+    { id: "shaheen", name: "Shaheen Enterprises", vendorType: "AGPR", vendorNo: "40912841", ntn: "3182941-2", stn: "1700318294119", srb: "S1700318294119", phone: "0300-1234567", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "", billSeq: 5001, taxType: "SST", taxRate: 15, allowTaxToggle: false },
+    { id: "hayah", name: "HAYAH ENTERPRISES", vendorType: "AGPR", vendorNo: "51092834", ntn: "4192834-5", stn: "1700419283411", srb: "S1700419283411", phone: "0321-9876543", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "", billSeq: 3001, taxType: "SST", taxRate: 15, allowTaxToggle: false },
+    { id: "comzon", name: "Comzon", vendorType: "AGPR", vendorNo: "61209384", ntn: "5129384-6", stn: "1700512938412", srb: "S1700512938412", phone: "0333-1122334", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "", billSeq: 1001, taxType: "GST", taxRate: 18, allowTaxToggle: false },
+    { id: "al-noor", name: "Al Noor", vendorType: "AGPR", vendorNo: "71829304", ntn: "6182930-7", stn: "1700618293013", srb: "S1700618293013", phone: "0345-5566778", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "", billSeq: 2001, taxType: "SST", taxRate: 15, allowTaxToggle: false },
+    { id: "al-mehran", name: "Al Mehran", vendorType: "AGPR", vendorNo: "81920394", ntn: "7192039-8", stn: "1700719203914", srb: "S1700719203914", phone: "0312-4455667", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "", billSeq: 4001, taxType: "SST", taxRate: 15, allowTaxToggle: false },
+    { id: "rizwan", name: "Rizwan Autoes", vendorType: "AGPR", vendorNo: "91029384", ntn: "8102938-9", stn: "1700810293815", srb: "S1700810293815", phone: "0301-7788990", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "", billSeq: 6001, taxType: "SST", taxRate: 15, allowTaxToggle: false },
+    { id: "asra", name: "Asra Traders", vendorType: "AGPR", vendorNo: "10928374", ntn: "9092837-0", stn: "1700909283716", srb: "S1700909283716", phone: "0302-3344556", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "", billSeq: 7001, taxType: "SST", taxRate: 15, allowTaxToggle: false }
 ];
 
-let departments = [
+let defaultDepartments = [
+    { code: "KA3371", name: "Port Health Establishments Port Bin, Karachi." },
     { code: "GPO", name: "Office of the New Town GPO,\nKarachi." },
-    { code: "MOT", name: "Office of the Additional IGP,\nMotorway Police,Karachi." },
-    { code: "CUSTOM", name: "Office of the Collectorate of Customs,\nKarachi." }
+    { code: "MOT", name: "Office of the Additional IGP,\nMotorway Police,Karachi." }
 ];
+
+// Persistent Local Storage Loaders
+let companies = JSON.parse(localStorage.getItem('portal_companies')) || defaultCompanies;
+let departments = JSON.parse(localStorage.getItem('portal_departments')) || defaultDepartments;
+let invoiceHistory = JSON.parse(localStorage.getItem('portal_history')) || [];
 
 let selectedCompany = companies[0];
+let currentQuarter = "1st Qtr";
 let items = [
     { desc: "LPG Gas Filled for the Month of September-2026", qty: 17, rate: 520 }
 ];
@@ -85,17 +31,17 @@ function init() {
     populateDepartmentDropdown();
     renderDepartmentManager();
     renderCompanyManager();
+    renderHistory();
     renderAll();
 
     document.getElementById('companySelect').addEventListener('change', (e) => {
         selectedCompany = companies[e.target.value];
-        document.getElementById('memoCompanyQuickSelect').value = e.target.value;
         renderAll();
     });
 
-    document.getElementById('memoCompanyQuickSelect').addEventListener('change', (e) => {
-        selectedCompany = companies[e.target.value];
-        document.getElementById('companySelect').value = e.target.value;
+    document.getElementById('quarterSelect').addEventListener('change', (e) => {
+        currentQuarter = e.target.value;
+        document.getElementById('activeQuarterBadge').innerText = `${currentQuarter} Active`;
         renderAll();
     });
 
@@ -127,6 +73,18 @@ function init() {
     document.getElementById('deptExcelFile').addEventListener('change', handleDeptExcelUpload);
 }
 
+function saveDepartmentsToStorage() {
+    localStorage.setItem('portal_departments', JSON.stringify(departments));
+}
+
+function saveCompaniesToStorage() {
+    localStorage.setItem('portal_companies', JSON.stringify(companies));
+}
+
+function saveHistoryToStorage() {
+    localStorage.setItem('portal_history', JSON.stringify(invoiceHistory));
+}
+
 function switchTab(tabId) {
     document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active-print'));
@@ -139,9 +97,10 @@ function switchTab(tabId) {
 
     const titles = {
         'dashboard': 'Portal Overview',
-        'bill-memo': 'Bill / Cash Memo',
+        'bill-memo': 'Bill / Cash Memo Generator',
         'delivery-challan': 'Delivery Challan (Work Completion)',
         'sales-tax': 'Sales Tax Invoice',
+        'history': 'Billing History Database',
         'departments': 'Department Manager',
         'companies': 'Company Settings'
     };
@@ -150,12 +109,9 @@ function switchTab(tabId) {
 
 function populateCompanyDropdowns() {
     const sel1 = document.getElementById('companySelect');
-    const sel2 = document.getElementById('memoCompanyQuickSelect');
     sel1.innerHTML = '';
-    sel2.innerHTML = '';
     companies.forEach((c, idx) => {
         sel1.innerHTML += `<option value="${idx}">${c.name} (Next Bill #: ${c.billSeq})</option>`;
-        sel2.innerHTML += `<option value="${idx}">${c.name}</option>`;
     });
 }
 
@@ -172,11 +128,12 @@ function addDepartment() {
     let name = document.getElementById('newDeptName').value.trim();
     if(code && name) {
         departments.push({ code, name });
+        saveDepartmentsToStorage();
         populateDepartmentDropdown();
         renderDepartmentManager();
         document.getElementById('newDeptCode').value = '';
         document.getElementById('newDeptName').value = '';
-        alert("Department successfully added!");
+        alert("Department successfully saved permanently!");
     }
 }
 
@@ -202,9 +159,10 @@ function handleDeptExcelUpload(e) {
                 }
             }
         }
+        saveDepartmentsToStorage();
         populateDepartmentDropdown();
         renderDepartmentManager();
-        alert(`${count} departments imported successfully from Excel!`);
+        alert(`${count} new departments permanently imported into system!`);
     };
     reader.readAsArrayBuffer(file);
 }
@@ -219,10 +177,68 @@ function renderDepartmentManager() {
                     <span class="font-bold text-xs bg-amber-200 text-amber-900 px-2 py-1 rounded mr-2">${d.code}</span>
                     <span class="text-xs font-medium text-slate-800">${d.name.replace('\n', ' ')}</span>
                 </div>
-                <button onclick="departments.splice(${idx},1); populateDepartmentDropdown(); renderDepartmentManager();" class="text-rose-600 font-bold text-xs hover:underline">Remove</button>
+                <button onclick="departments.splice(${idx},1); saveDepartmentsToStorage(); populateDepartmentDropdown(); renderDepartmentManager();" class="text-rose-600 font-bold text-xs hover:underline">Remove</button>
             </div>
         `;
     });
+}
+
+function triggerPrintAndSave() {
+    const dept = document.getElementById('deptInput').value;
+    let subtotal = 0;
+    items.forEach(i => subtotal += (i.qty * i.rate));
+    let taxAmount = subtotal * (selectedCompany.taxRate / 100);
+    let grandTotal = subtotal + taxAmount;
+
+    // Save Record
+    invoiceHistory.unshift({
+        date: new Date().toLocaleDateString('en-GB'),
+        quarter: currentQuarter,
+        billNo: selectedCompany.billSeq,
+        company: selectedCompany.name,
+        dept: dept.split('\n')[0],
+        amount: Math.round(grandTotal)
+    });
+
+    // Auto Increment Bill Sequence
+    selectedCompany.billSeq++;
+    saveCompaniesToStorage();
+    saveHistoryToStorage();
+    populateCompanyDropdowns();
+    renderHistory();
+    renderAll();
+
+    // Trigger Print Window
+    window.print();
+}
+
+function renderHistory() {
+    const tbody = document.getElementById('historyTableBody');
+    tbody.innerHTML = '';
+    if(invoiceHistory.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">No invoice records saved yet.</td></tr>`;
+        return;
+    }
+    invoiceHistory.forEach(h => {
+        tbody.innerHTML += `
+            <tr class="hover:bg-amber-50/50">
+                <td class="p-3 font-mono">${h.date}</td>
+                <td class="p-3 font-bold text-amber-800">${h.quarter}</td>
+                <td class="p-3 font-mono font-bold">${h.billNo}</td>
+                <td class="p-3">${h.company}</td>
+                <td class="p-3">${h.dept}</td>
+                <td class="p-3 text-right font-mono font-bold">Rs. ${h.amount.toLocaleString()}</td>
+            </tr>
+        `;
+    });
+}
+
+function clearHistory() {
+    if(confirm("Kya aap saari billing history clear karna chahte hain?")) {
+        invoiceHistory = [];
+        saveHistoryToStorage();
+        renderHistory();
+    }
 }
 
 function renderAll() {
@@ -286,7 +302,7 @@ function renderAll() {
         `;
     });
 
-    // Sales Tax Invoice Dynamic Adaptation (15% SST vs 18% GST)
+    // Sales Tax Invoice Dynamic Adaptation
     document.getElementById('stSerial').innerText = selectedCompany.billSeq;
     document.getElementById('stDate').innerText = new Date().toLocaleDateString('en-GB');
     document.getElementById('stSupplierAddr').innerText = selectedCompany.address;
@@ -374,45 +390,45 @@ function renderCompanyManager() {
                     <h4 class="font-bold text-base text-slate-900">${c.name}</h4>
                     <div class="flex items-center gap-2">
                         <span class="text-xs font-bold text-slate-600">Next Bill #:</span>
-                        <input type="number" value="${c.billSeq}" onchange="companies[${idx}].billSeq = parseInt(this.value); populateCompanyDropdowns(); renderAll();" class="w-24 border border-slate-300 rounded-lg p-1 text-xs text-center font-bold bg-white">
+                        <input type="number" value="${c.billSeq}" onchange="companies[${idx}].billSeq = parseInt(this.value); saveCompaniesToStorage(); populateCompanyDropdowns(); renderAll();" class="w-24 border border-slate-300 rounded-lg p-1 text-xs text-center font-bold bg-white">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
                     <div>
                         <label class="block font-bold text-slate-600 mb-1">Vendor Type</label>
-                        <select onchange="companies[${idx}].vendorType = this.value; renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 font-bold bg-white">
+                        <select onchange="companies[${idx}].vendorType = this.value; saveCompaniesToStorage(); renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 font-bold bg-white">
                             <option value="AGPR" ${c.vendorType === 'AGPR' ? 'selected' : ''}>AGPR Number</option>
                             <option value="AG Sindh" ${c.vendorType === 'AG Sindh' ? 'selected' : ''}>AG Sindh Number</option>
                         </select>
                     </div>
                     <div>
                         <label class="block font-bold text-slate-600 mb-1">Vendor / AG #</label>
-                        <input type="text" value="${c.vendorNo}" oninput="companies[${idx}].vendorNo = this.value; renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
+                        <input type="text" value="${c.vendorNo}" oninput="companies[${idx}].vendorNo = this.value; saveCompaniesToStorage(); renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-600 mb-1">NTN #</label>
-                        <input type="text" value="${c.ntn}" oninput="companies[${idx}].ntn = this.value; renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
+                        <input type="text" value="${c.ntn}" oninput="companies[${idx}].ntn = this.value; saveCompaniesToStorage(); renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-600 mb-1">STN / Sale Tax #</label>
-                        <input type="text" value="${c.stn}" oninput="companies[${idx}].stn = this.value; renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
+                        <input type="text" value="${c.stn}" oninput="companies[${idx}].stn = this.value; saveCompaniesToStorage(); renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
                     <div>
                         <label class="block font-bold text-slate-600 mb-1">SRB #</label>
-                        <input type="text" value="${c.srb}" oninput="companies[${idx}].srb = this.value; renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
+                        <input type="text" value="${c.srb}" oninput="companies[${idx}].srb = this.value; saveCompaniesToStorage(); renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-600 mb-1">Mobile #</label>
-                        <input type="text" value="${c.phone}" oninput="companies[${idx}].phone = this.value; renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
+                        <input type="text" value="${c.phone}" oninput="companies[${idx}].phone = this.value; saveCompaniesToStorage(); renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-600 mb-1">Tax Rule & Rate</label>
                         ${c.allowTaxToggle ? `
-                            <select onchange="companies[${idx}].taxType = this.value; companies[${idx}].taxRate = (this.value==='GST'?18:15); renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 font-bold bg-white text-orange-600">
+                            <select onchange="companies[${idx}].taxType = this.value; companies[${idx}].taxRate = (this.value==='GST'?18:15); saveCompaniesToStorage(); renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 font-bold bg-white text-orange-600">
                                 <option value="GST" ${c.taxType === 'GST' ? 'selected' : ''}>18% GST (Sales Tax)</option>
                                 <option value="SST" ${c.taxType === 'SST' ? 'selected' : ''}>15% SST (Services)</option>
                             </select>
@@ -422,22 +438,22 @@ function renderCompanyManager() {
                     </div>
                     <div>
                         <label class="block font-bold text-slate-600 mb-1">Email Address</label>
-                        <input type="text" value="${c.email}" oninput="companies[${idx}].email = this.value; renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
+                        <input type="text" value="${c.email}" oninput="companies[${idx}].email = this.value; saveCompaniesToStorage(); renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs border-t pt-3">
                     <div>
                         <label class="block font-bold text-slate-600 mb-1">Account #</label>
-                        <input type="text" value="${c.accountNo}" oninput="companies[${idx}].accountNo = this.value; renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
+                        <input type="text" value="${c.accountNo}" oninput="companies[${idx}].accountNo = this.value; saveCompaniesToStorage(); renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-600 mb-1">IBAN #</label>
-                        <input type="text" value="${c.iban}" oninput="companies[${idx}].iban = this.value; renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
+                        <input type="text" value="${c.iban}" oninput="companies[${idx}].iban = this.value; saveCompaniesToStorage(); renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-600 mb-1">CNIC #</label>
-                        <input type="text" value="${c.cnic}" oninput="companies[${idx}].cnic = this.value; renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
+                        <input type="text" value="${c.cnic}" oninput="companies[${idx}].cnic = this.value; saveCompaniesToStorage(); renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
                     </div>
                 </div>
             </div>
