@@ -50,7 +50,7 @@
         </div>
 
         <div class="border-t border-slate-100 pt-4 text-center">
-            <p class="text-xs text-slate-400">Enterprise Invoicing v3.0</p>
+            <p class="text-xs text-slate-400">Enterprise Invoicing v3.5</p>
         </div>
     </aside>
 
@@ -64,7 +64,7 @@
                 <p class="text-xs text-slate-500">Manage billing sequence, companies & departments automatically</p>
             </div>
             
-            <div class="flex items-center gap-3">
+            <div id="headerPrintAction" class="hidden items-center gap-3">
                 <button onclick="triggerPrintAndSave()" class="bg-orange-600 hover:bg-orange-700 text-white font-semibold text-sm px-5 py-2.5 rounded-xl shadow-md transition flex items-center gap-2">
                     🖨️ Print & Save Record
                 </button>
@@ -98,28 +98,28 @@
                     <div class="w-12 h-12 rounded-full border-4 border-emerald-500 border-t-transparent flex items-center justify-center font-bold text-xs text-emerald-600">NET</div>
                 </div>
             </div>
-
-            <!-- Upload Section -->
-            <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm space-y-4">
-                <div class="flex items-center gap-3">
-                    <span class="p-2 bg-emerald-100 text-emerald-700 rounded-lg text-lg">📁</span>
-                    <div>
-                        <h4 class="font-bold text-slate-800">Bulk Excel Data Import (.xlsx, .csv)</h4>
-                        <p class="text-xs text-slate-500">Upload your multi-row Excel sheet (Description, Qty, Rate) to auto-fill all reports</p>
-                    </div>
-                </div>
-                <input type="file" id="excelFile" accept=".xlsx, .xls, .csv" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-amber-100 file:text-amber-800 hover:file:bg-amber-200 cursor-pointer">
-            </div>
         </div>
 
         <!-- TAB 2: BILL / CASH MEMO -->
         <div id="tab-bill-memo" class="tab-content hidden space-y-6">
-            <!-- INVOICE & DEPARTMENT CONTROLS (Merged Right Above Printed Bill) -->
+            <!-- INVOICE & DEPARTMENT CONTROLS (Includes Excel Upload & Quarter Selector without months) -->
             <div class="max-w-4xl mx-auto bg-white p-6 rounded-2xl border border-amber-200 shadow-sm space-y-4 no-print">
                 <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider border-b pb-2 flex justify-between items-center">
                     <span>INVOICE & DEPARTMENT CONTROLS</span>
                     <span id="activeQuarterBadge" class="bg-amber-100 text-amber-900 font-extrabold px-2.5 py-1 rounded-md text-[10px]">1st Qtr Active</span>
                 </h4>
+
+                <!-- Bulk Excel Data Import Section Moved Here -->
+                <div class="bg-amber-50/60 p-4 rounded-xl border border-amber-200 flex flex-wrap justify-between items-center gap-4">
+                    <div class="flex items-center gap-3">
+                        <span class="p-2 bg-emerald-100 text-emerald-700 rounded-lg text-base">📁</span>
+                        <div>
+                            <h5 class="font-bold text-slate-800 text-xs">Bulk Excel Data Import (.xlsx, .csv)</h5>
+                            <p class="text-[11px] text-slate-500">Upload multi-row Excel sheet (Description, Qty, Rate)</p>
+                        </div>
+                    </div>
+                    <input type="file" id="excelFile" accept=".xlsx, .xls, .csv" class="text-xs text-slate-500 file:mr-4 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-amber-200 file:text-amber-900 hover:file:bg-amber-300 cursor-pointer">
+                </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div>
@@ -132,10 +132,10 @@
                     <div>
                         <label class="block text-xs font-bold text-slate-600 mb-1">Quarter Selector</label>
                         <select id="quarterSelect" class="w-full border border-slate-200 rounded-xl p-2 text-xs font-bold bg-amber-50 focus:ring-2 focus:ring-amber-500 focus:outline-none">
-                            <option value="1st Qtr">1st Quarter (Jul - Sep)</option>
-                            <option value="2nd Qtr">2nd Quarter (Oct - Dec)</option>
-                            <option value="3rd Qtr">3rd Quarter (Jan - Mar)</option>
-                            <option value="4th Qtr">4th Quarter (Apr - Jun)</option>
+                            <option value="1st Qtr">1st Qtr</option>
+                            <option value="2nd Qtr">2nd Qtr</option>
+                            <option value="3rd Qtr">3rd Qtr</option>
+                            <option value="4th Qtr">4th Qtr</option>
                         </select>
                     </div>
 
@@ -267,7 +267,7 @@
                 </div>
 
                 <div class="flex justify-between text-xs font-bold border-b border-black pb-1 mb-2">
-                    <div>Serial No. <span id="stSerial" class="border-b border-black inline-block w-20 text-center">6819</span></div>
+                    <div>Serial No. <span id="stSerial" class="border-b border-black inline-block w-20 text-center"></span></div>
                     <div>Date. <span id="stDate" class="border-b border-black inline-block w-32 text-center"></span></div>
                     <div>Time of Supply <span class="border-b border-black inline-block w-32"></span></div>
                 </div>
@@ -372,7 +372,7 @@
         <!-- TAB 7: COMPANY MANAGER -->
         <div id="tab-companies" class="tab-content hidden space-y-4">
             <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm">
-                <h3 class="font-bold text-slate-800 mb-4">Manage Companies, Tax Rules & Official Details</h3>
+                <h3 class="font-bold text-slate-800 mb-4">Manage Companies, Tax Rules, Bill & Serial Numbers</h3>
                 <div id="companyList" class="space-y-6"></div>
             </div>
         </div>
