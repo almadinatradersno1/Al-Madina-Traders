@@ -3,273 +3,302 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Al-Madina Enterprises - Invoice Generator Dashboard</title>
-    <!-- SheetJS for Excel / CSV Parsing -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <!-- Tailwind CSS for modern styling -->
+    <title>Post Office Billing Portal</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @media print {
-            @page {
-                size: A4 portrait;
-                margin: 2.6in 0.4in 0.4in 0.4in !important; /* Top margin strictly 2.6 inches for Letterhead */
-            }
-            body {
-                background: white !important;
-                padding: 0 !important;
-                margin: 0 !important;
-                -webkit-print-color-adjust: exact;
-            }
-            .no-print {
-                display: none !important;
-            }
-            .print-container {
-                box-shadow: none !important;
-                border: none !important;
-                padding: 0 !important;
-                margin: 0 !important;
-                width: 100% !important;
-            }
-            /* Force compact rows for single page print */
-            table th, table td {
-                padding-top: 2px !important;
-                padding-bottom: 2px !important;
-                font-size: 11px !important;
-            }
-        }
-    </style>
+    <!-- SheetJS for Excel Upload -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-slate-100 text-slate-800 font-sans min-h-screen p-4 md:p-8">
+<body class="bg-[#F6F4EE] text-slate-800 font-sans min-h-screen flex">
 
-    <!-- Top Control / Dashboard Panel (Hidden on Print) -->
-    <div class="max-w-4xl mx-auto mb-8 bg-white p-6 rounded-xl shadow-md no-print">
-        <h1 class="text-2xl font-bold text-slate-900 mb-4">🚀 Office Billing & Invoice Dashboard</h1>
-        <p class="text-sm text-slate-600 mb-6">Excel file upload karein ya data enter karein. 2.6 inch Letterhead top margin & 1-page Auto-Fit active hai!</p>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <!-- File Upload -->
-            <div class="border-2 border-dashed border-slate-300 p-4 rounded-lg text-center hover:border-blue-500 transition">
-                <label class="block text-sm font-semibold mb-2 text-slate-700">📁 Upload Excel / CSV</label>
-                <input type="file" id="excelFile" accept=".xlsx, .xls, .csv" class="text-xs text-slate-500 w-full file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
+    <!-- Left Sidebar Navigation (Hidden on Print) -->
+    <aside class="w-64 bg-white border-r border-amber-200/60 p-6 flex flex-col justify-between min-h-screen no-print shrink-0 shadow-sm">
+        <div>
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 bg-orange-600 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-md">📦</div>
+                <div>
+                    <h1 class="font-bold text-slate-900 leading-tight">POST OFFICE</h1>
+                    <p class="text-[10px] tracking-widest uppercase text-orange-600 font-extrabold">BILLING PORTAL</p>
+                </div>
             </div>
 
-            <!-- Department Quick Select -->
+            <nav class="space-y-2">
+                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition text-slate-600 hover:bg-amber-50 hover:text-amber-900 active-tab">
+                    <span>📊</span> Dashboard
+                </button>
+                <button onclick="switchTab('bill-memo')" id="nav-bill-memo" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition text-slate-600 hover:bg-amber-50 hover:text-amber-900">
+                    <span>🧾</span> Bill / Cash Memo
+                </button>
+                <button onclick="switchTab('delivery-challan')" id="nav-delivery-challan" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition text-slate-600 hover:bg-amber-50 hover:text-amber-900">
+                    <span>🚚</span> Delivery Challan
+                </button>
+                <button onclick="switchTab('sales-tax')" id="nav-sales-tax" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition text-slate-600 hover:bg-amber-50 hover:text-amber-900">
+                    <span>📄</span> Sales Tax Invoice
+                </button>
+                <button onclick="switchTab('companies')" id="nav-companies" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition text-slate-600 hover:bg-amber-50 hover:text-amber-900">
+                    <span>⚙️</span> Company Settings
+                </button>
+            </nav>
+        </div>
+
+        <div class="border-t border-slate-100 pt-4 text-center">
+            <p class="text-xs text-slate-400">Enterprise Invoicing v2.0</p>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 p-8 overflow-y-auto min-h-screen">
+
+        <!-- Controls Header (Hidden on Print) -->
+        <div class="mb-6 flex flex-wrap justify-between items-center no-print gap-4">
             <div>
-                <label class="block text-sm font-semibold mb-2 text-slate-700">🏢 Department Shortcut</label>
-                <select id="deptSelect" class="w-full border border-slate-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-blue-500">
-                    <option value="Office of the New Town GPO, Karachi">New Town GPO, Karachi</option>
-                    <option value="Office of the General Post Office, Karachi">General Post Office (GPO)</option>
-                    <option value="Custom Department / Other">Custom Department</option>
-                </select>
+                <h2 id="pageTitle" class="text-2xl font-bold text-slate-900">Portal Overview</h2>
+                <p class="text-xs text-slate-500">Manage billing sequence, companies & documents automatically</p>
             </div>
-
-            <!-- Stamp & Signature Gap Adjustment -->
-            <div>
-                <label class="block text-sm font-semibold mb-2 text-slate-700">✍️ Stamp Gap Adjuster (<span id="gapVal">40</span>px)</label>
-                <input type="range" id="stampGap" min="10" max="150" value="40" class="w-full accent-blue-600 cursor-pointer">
-            </div>
-        </div>
-
-        <div class="flex flex-wrap gap-4 items-center justify-between border-t pt-4">
-            <div class="flex gap-2">
-                <button onclick="addRow()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm px-4 py-2 rounded-lg font-medium transition">+ Add Row</button>
-                <button onclick="clearData()" class="bg-rose-50 hover:bg-rose-100 text-rose-600 text-sm px-4 py-2 rounded-lg font-medium transition">Clear All</button>
-            </div>
-            <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold shadow transition flex items-center gap-2">
-                🖨️ Print / Save PDF
-            </button>
-        </div>
-    </div>
-
-    <!-- Printable Invoice Sheet -->
-    <div class="max-w-4xl mx-auto bg-white p-8 md:p-12 rounded-xl shadow-lg print-container border border-slate-200">
-        
-        <!-- Header Section -->
-        <div class="flex justify-between items-start border-b-2 border-black pb-3 mb-4">
-            <div>
-                <p class="text-xs font-bold uppercase tracking-wide">To,</p>
-                <div id="departmentOutput" class="text-xs font-medium mt-1 max-w-xs whitespace-pre-line">Office of the New Town GPO,
-Karachi.</div>
-            </div>
-            <div class="border-2 border-black p-2 text-xs font-mono space-y-1 bg-slate-50 min-w-[200px]">
-                <div class="flex justify-between"><span>Bill #:</span> <input type="text" id="billNo" value="12489" class="font-bold bg-transparent text-right w-20 focus:outline-none border-b border-dashed border-black"></div>
-                <div class="flex justify-between"><span>Vender #:</span> <input type="text" id="venderNo" value="30368984" class="font-bold bg-transparent text-right w-20 focus:outline-none border-b border-dashed border-black"></div>
-                <div class="flex justify-between"><span>NTN #:</span> <span class="font-bold">2128115-7</span></div>
-                <div class="flex justify-between"><span>Sale Tax #:</span> <span class="font-bold">1700212811518</span></div>
-            </div>
-        </div>
-
-        <!-- Title Section -->
-        <div class="text-center mb-4">
-            <h2 class="text-base font-black tracking-widest border-2 border-black py-0.5 inline-block px-6 uppercase bg-slate-50">BILL / CASH MEMO</h2>
-            <p class="text-[10px] font-bold tracking-wider mt-0.5 uppercase text-slate-600">OTHER ITEMS</p>
-        </div>
-
-        <!-- Items Table -->
-        <table class="w-full mb-4 border-collapse text-xs">
-            <thead>
-                <tr class="border-y-2 border-black">
-                    <th class="py-1.5 px-2 text-center w-10 border-x border-black">S. #</th>
-                    <th class="py-1.5 px-3 text-left border-x border-black">Description</th>
-                    <th class="py-1.5 px-2 text-center w-16 border-x border-black">Qty</th>
-                    <th class="py-1.5 px-2 text-right w-24 border-x border-black">Rate</th>
-                    <th class="py-1.5 px-2 text-right w-28 border-x border-black">Amount</th>
-                    <th class="no-print w-10 text-center"></th>
-                </tr>
-            </thead>
-            <tbody id="invoiceTableBody" class="border-b-2 border-black">
-                <!-- Dynamically populated rows -->
-            </tbody>
-        </table>
-
-        <!-- Totals Section -->
-        <div class="flex justify-end mb-4">
-            <table class="w-64 border-2 border-black text-xs">
-                <tr class="border-b border-black">
-                    <td class="p-1.5 font-bold border-r border-black">Amount</td>
-                    <td id="subTotal" class="p-1.5 text-right font-bold">0</td>
-                </tr>
-                <tr class="border-b border-black">
-                    <td class="p-1.5 font-bold border-r border-black">18% GST</td>
-                    <td id="gstTotal" class="p-1.5 text-right font-bold">0</td>
-                </tr>
-                <tr>
-                    <td class="p-1.5 font-black border-r border-black">Total Amount</td>
-                    <td id="grandTotal" class="p-1.5 text-right font-black">0</td>
-                </tr>
-            </table>
-        </div>
-
-        <!-- Stamp & Sign Footer Space -->
-        <div id="stampArea" style="height: 40px;" class="transition-all"></div>
-        <div class="border-t-2 border-black pt-1 inline-block font-bold text-xs">
-            For Al-Madina Enterprises
-        </div>
-    </div>
-
-    <!-- JavaScript Logic -->
-    <script>
-        let items = [
-            { desc: "Dustbin (Medium)", qty: 1, rate: 500 },
-            { desc: "Garbage Bags", qty: 4, rate: 350 },
-            { desc: "Extension Board", qty: 2, rate: 765 },
-            { desc: "Glint Glass Cleaner", qty: 3, rate: 385 },
-            { desc: "LED Bulb 18 Watts", qty: 4, rate: 235 },
-            { desc: "Mop", qty: 2, rate: 900 },
-            { desc: "Vim Dish Wash Powder", qty: 3, rate: 250 }
-        ];
-
-        function renderTable() {
-            const tbody = document.getElementById('invoiceTableBody');
-            tbody.innerHTML = '';
             
-            let subtotal = 0;
+            <div class="flex items-center gap-3">
+                <button onclick="window.print()" class="bg-orange-600 hover:bg-orange-700 text-white font-semibold text-sm px-5 py-2.5 rounded-xl shadow-md transition flex items-center gap-2">
+                    🖨️ Print Active View
+                </button>
+            </div>
+        </div>
 
-            items.forEach((item, index) => {
-                let amount = item.qty * item.rate;
-                subtotal += amount;
+        <!-- TAB 1: DASHBOARD -->
+        <div id="tab-dashboard" class="tab-content space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Bill Amount</p>
+                        <h3 id="statSubtotal" class="text-2xl font-black text-slate-800 mt-1">Rs. 0</h3>
+                    </div>
+                    <div class="w-12 h-12 rounded-full border-4 border-orange-500 border-t-transparent flex items-center justify-center font-bold text-xs text-orange-600">GST</div>
+                </div>
 
-                let tr = document.createElement('tr');
-                tr.className = 'border-b border-dashed border-slate-400';
-                tr.innerHTML = `
-                    <td class="py-1 px-2 text-center border-x border-black font-mono">${index + 1}</td>
-                    <td class="py-1 px-3 border-x border-black"><input type="text" value="${item.desc}" oninput="updateItem(${index}, 'desc', this.value)" class="w-full bg-transparent focus:outline-none"></td>
-                    <td class="py-1 px-2 text-center border-x border-black"><input type="number" value="${item.qty}" oninput="updateItem(${index}, 'qty', this.value)" class="w-full text-center bg-transparent focus:outline-none"></td>
-                    <td class="py-1 px-2 text-right border-x border-black"><input type="number" value="${item.rate}" oninput="updateItem(${index}, 'rate', this.value)" class="w-full text-right bg-transparent focus:outline-none"></td>
-                    <td class="py-1 px-2 text-right border-x border-black font-mono">${amount.toLocaleString()}</td>
-                    <td class="no-print text-center"><button onclick="deleteRow(${index})" class="text-rose-600 font-bold hover:text-rose-800">×</button></td>
-                `;
-                tbody.appendChild(tr);
-            });
+                <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Items Count</p>
+                        <h3 id="statItems" class="text-2xl font-black text-slate-800 mt-1">0</h3>
+                    </div>
+                    <div class="w-12 h-12 rounded-full border-4 border-blue-500 border-t-transparent flex items-center justify-center font-bold text-xs text-blue-600">QTY</div>
+                </div>
 
-            let gst = subtotal * 0.18;
-            let grandTotal = subtotal + gst;
+                <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Grand Total (Incl Tax)</p>
+                        <h3 id="statGrandTotal" class="text-2xl font-black text-slate-800 mt-1">Rs. 0</h3>
+                    </div>
+                    <div class="w-12 h-12 rounded-full border-4 border-emerald-500 border-t-transparent flex items-center justify-center font-bold text-xs text-emerald-600">NET</div>
+                </div>
+            </div>
 
-            document.getElementById('subTotal').innerText = subtotal.toLocaleString();
-            document.getElementById('gstTotal').innerText = Math.round(gst).toLocaleString();
-            document.getElementById('grandTotal').innerText = Math.round(grandTotal).toLocaleString();
-        }
+            <!-- Upload Section -->
+            <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm space-y-4">
+                <div class="flex items-center gap-3">
+                    <span class="p-2 bg-emerald-100 text-emerald-700 rounded-lg text-lg">📁</span>
+                    <div>
+                        <h4 class="font-bold text-slate-800">Bulk Excel Data Import (.xlsx, .csv)</h4>
+                        <p class="text-xs text-slate-500">Upload your multi-row Excel sheet (Description, Qty, Rate) to auto-fill all 3 reports</p>
+                    </div>
+                </div>
+                <input type="file" id="excelFile" accept=".xlsx, .xls, .csv" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-amber-100 file:text-amber-800 hover:file:bg-amber-200 cursor-pointer">
+            </div>
 
-        function updateItem(index, field, value) {
-            if (field === 'qty' || field === 'rate') {
-                items[index][field] = parseFloat(value) || 0;
-            } else {
-                items[index][field] = value;
-            }
-            renderTable();
-        }
+            <!-- Basic Info Form -->
+            <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm space-y-4">
+                <h4 class="font-bold text-slate-800 text-sm uppercase tracking-wider border-b pb-2">Invoice & Department Settings</h4>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Company Letterhead</label>
+                        <select id="companySelect" class="w-full border border-slate-200 rounded-xl p-2.5 text-sm font-medium focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Department Name</label>
+                        <input type="text" id="deptInput" value="Office of the New Town GPO, Karachi." class="w-full border border-slate-200 rounded-xl p-2.5 text-sm font-medium focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Stamp Gap Adjuster (<span id="gapVal">40</span>px)</label>
+                        <input type="range" id="stampGap" min="10" max="150" value="40" class="w-full mt-2 accent-orange-600">
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        function addRow() {
-            items.push({ desc: "New Item", qty: 1, rate: 0 });
-            renderTable();
-        }
+        <!-- TAB 2: BILL / CASH MEMO -->
+        <div id="tab-bill-memo" class="tab-content hidden">
+            <div class="max-w-4xl mx-auto bg-white p-10 rounded-2xl shadow-sm border border-amber-100 print-container">
+                <div class="flex justify-between items-start border-b-2 border-black pb-3 mb-4">
+                    <div>
+                        <p class="text-xs font-bold uppercase">To,</p>
+                        <div id="memoDept" class="text-xs font-medium mt-1 whitespace-pre-line"></div>
+                    </div>
+                    <div class="border-2 border-black p-2 text-xs font-mono space-y-1 bg-slate-50 min-w-[210px]">
+                        <div class="flex justify-between"><span>Bill #:</span> <span id="memoBillNo" class="font-bold"></span></div>
+                        <div class="flex justify-between"><span>Vender #:</span> <span id="memoVendorNo" class="font-bold"></span></div>
+                        <div class="flex justify-between"><span>NTN #:</span> <span id="memoNTN" class="font-bold"></span></div>
+                        <div class="flex justify-between"><span>Sale Tax #:</span> <span id="memoSTN" class="font-bold"></span></div>
+                    </div>
+                </div>
 
-        function deleteRow(index) {
-            items.splice(index, 1);
-            renderTable();
-        }
+                <div class="text-center mb-4">
+                    <h2 class="text-base font-black tracking-widest border-2 border-black py-0.5 inline-block px-6 uppercase bg-slate-50">BILL / CASH MEMO</h2>
+                    <p class="text-[10px] font-bold tracking-wider mt-0.5 uppercase text-slate-600">OTHER ITEMS</p>
+                </div>
 
-        function clearData() {
-            if(confirm("Kya aap saara data clear karna chahte hain?")) {
-                items = [];
-                renderTable();
-            }
-        }
+                <table class="w-full mb-4 border-collapse text-xs">
+                    <thead>
+                        <tr class="border-y-2 border-black">
+                            <th class="py-1.5 px-2 text-center w-10 border-x border-black">S. #</th>
+                            <th class="py-1.5 px-3 text-left border-x border-black">Description</th>
+                            <th class="py-1.5 px-2 text-center w-16 border-x border-black">Qty</th>
+                            <th class="py-1.5 px-2 text-right w-24 border-x border-black">Rate</th>
+                            <th class="py-1.5 px-2 text-right w-28 border-x border-black">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody id="memoTableBody" class="border-b-2 border-black"></tbody>
+                </table>
 
-        // Excel file reader handling
-        document.getElementById('excelFile').addEventListener('change', function(e) {
-            let file = e.target.files[0];
-            if (!file) return;
+                <div class="flex justify-end mb-4">
+                    <table class="w-64 border-2 border-black text-xs">
+                        <tr class="border-b border-black">
+                            <td class="p-1.5 font-bold border-r border-black">Amount</td>
+                            <td id="memoSubtotal" class="p-1.5 text-right font-bold">0</td>
+                        </tr>
+                        <tr class="border-b border-black">
+                            <td class="p-1.5 font-bold border-r border-black"><span id="memoTaxLabel">18% GST</span></td>
+                            <td id="memoTaxTotal" class="p-1.5 text-right font-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td class="p-1.5 font-black border-r border-black">Total Amount</td>
+                            <td id="memoGrandTotal" class="p-1.5 text-right font-black">0</td>
+                        </tr>
+                    </table>
+                </div>
 
-            let reader = new FileReader();
-            reader.onload = function(e) {
-                let data = new Uint8Array(e.target.result);
-                let workbook = XLSX.read(data, {type: 'array'});
-                let firstSheet = workbook.SheetNames[0];
-                let worksheet = workbook.Sheets[firstSheet];
-                let json = XLSX.utils.sheet_to_json(worksheet, {header: 1});
+                <div class="stamp-space" style="height: 40px;"></div>
+                <div class="border-t-2 border-black pt-1 inline-block font-bold text-xs">
+                    For <span class="memoCompName">Al-Madina Enterprises</span>
+                </div>
+            </div>
+        </div>
 
-                let parsedItems = [];
-                for(let i = 0; i < json.length; i++) {
-                    let row = json[i];
-                    if(row.length >= 3 && row[0] && typeof row[1] !== 'undefined' && typeof row[2] !== 'undefined') {
-                        let q = parseFloat(row[1]);
-                        let r = parseFloat(row[2]);
-                        if(!isNaN(q) && !isNaN(r)) {
-                            parsedItems.push({
-                                desc: String(row[0]),
-                                qty: q,
-                                rate: r
-                            });
-                        }
-                    }
-                }
+        <!-- TAB 3: DELIVERY CHALLAN (WORK COMPLETION) -->
+        <div id="tab-delivery-challan" class="tab-content hidden">
+            <div class="max-w-4xl mx-auto bg-white p-10 rounded-2xl shadow-sm border border-amber-100 print-container">
+                <div class="mb-6">
+                    <p class="text-xs font-bold uppercase">To,</p>
+                    <div id="challanDept" class="text-xs font-medium mt-1 whitespace-pre-line"></div>
+                </div>
 
-                if(parsedItems.length > 0) {
-                    items = parsedItems;
-                    renderTable();
-                    alert("Excel file successfully upload aur parse ho gayi!");
-                } else {
-                    alert("Excel data read nahi ho saka. Barah-e-karam check karein ke columns Description, Qty, aur Rate format me hain.");
-                }
-            };
-            reader.readAsArrayBuffer(file);
-        });
+                <div class="text-center mb-6">
+                    <h2 class="text-base font-black tracking-widest border-b-2 border-black inline-block pb-0.5 px-4 uppercase">WORK COMPLETION</h2>
+                </div>
 
-        // Department Selector change handler
-        document.getElementById('deptSelect').addEventListener('change', function(e) {
-            document.getElementById('departmentOutput').innerText = e.target.value;
-        });
+                <table class="w-full mb-6 border-collapse text-xs border-2 border-black">
+                    <thead>
+                        <tr class="border-b-2 border-black bg-slate-50">
+                            <th class="py-2 px-2 text-center w-12 border-r border-black">S. #</th>
+                            <th class="py-2 px-4 text-left border-r border-black">Items</th>
+                            <th class="py-2 px-3 text-center w-28">Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody id="challanTableBody"></tbody>
+                </table>
 
-        // Stamp Gap Slider handler
-        document.getElementById('stampGap').addEventListener('input', function(e) {
-            let val = e.target.value;
-            document.getElementById('gapVal').innerText = val;
-            document.getElementById('stampArea').style.height = val + 'px';
-        });
+                <p class="text-xs font-medium mb-12">Thanking you in anticipation.</p>
 
-        // Initial Render
-        renderTable();
-    </script>
+                <div class="stamp-space" style="height: 40px;"></div>
+
+                <div class="space-y-12">
+                    <div class="border-t-2 border-black pt-1">
+                        <p class="font-black text-xs uppercase">CONTRACTOR SIGNATURE M/S. <span class="memoCompName">AL-MADINA ENTERPRISES</span></p>
+                        <p class="text-[10px] text-slate-500 font-bold uppercase">WITH RUBBER STAMP</p>
+                    </div>
+
+                    <div class="border-t-2 border-black pt-1">
+                        <p class="font-black text-xs uppercase">RECEIVING SIGNATURE</p>
+                        <p class="text-[10px] text-slate-500 font-bold uppercase">WITH RUBBER STAMP</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: SALES TAX INVOICE -->
+        <div id="tab-sales-tax" class="tab-content hidden">
+            <div class="max-w-4xl mx-auto bg-white p-10 rounded-2xl shadow-sm border border-amber-100 print-container">
+                <div class="text-center mb-4">
+                    <h2 class="text-lg font-black tracking-widest italic uppercase">SALES TAX INVOICE</h2>
+                </div>
+
+                <div class="flex justify-between text-xs font-bold border-b border-black pb-1 mb-2">
+                    <div>Serial No. <span id="stSerial" class="border-b border-black inline-block w-20 text-center">6819</span></div>
+                    <div>Date. <span id="stDate" class="border-b border-black inline-block w-32 text-center"></span></div>
+                    <div>Time of Supply <span class="border-b border-black inline-block w-32"></span></div>
+                </div>
+
+                <div class="grid grid-cols-2 border-2 border-black text-xs mb-3">
+                    <div class="p-2 border-r border-black space-y-1">
+                        <div class="flex"><span class="w-32 font-bold">Supplier's Name</span> <span class="memoCompName font-bold"></span></div>
+                        <div class="flex"><span class="w-32 font-bold">Address</span> <span id="stSupplierAddr"></span></div>
+                        <div class="flex"><span class="w-32 font-bold">Telephone #.</span> <span id="stSupplierPhone"></span></div>
+                        <div class="flex"><span class="w-32 font-bold">ST Registration #.</span> <span id="stSupplierSTN" class="font-bold"></span></div>
+                    </div>
+                    <div class="p-2 space-y-1">
+                        <div class="flex"><span class="w-32 font-bold">Buyer's Name</span> <span id="stBuyerName" class="font-bold"></span></div>
+                        <div class="flex"><span class="w-32 font-bold">Address</span> <span>-</span></div>
+                        <div class="flex"><span class="w-32 font-bold">Telephone #.</span> <span>-</span></div>
+                        <div class="flex"><span class="w-32 font-bold">ST Registration #.</span> <span>-</span></div>
+                    </div>
+                </div>
+
+                <div class="text-xs font-bold mb-2">Term of Sale : <span class="border-b border-black inline-block w-64"></span></div>
+
+                <table class="w-full mb-4 border-collapse text-[11px] border-2 border-black">
+                    <thead>
+                        <tr class="border-b-2 border-black text-center font-bold bg-slate-50">
+                            <th class="p-1 border-r border-black w-12">QTY</th>
+                            <th class="p-1 border-r border-black">Description of Goods</th>
+                            <th class="p-1 border-r border-black w-16">Unit Price</th>
+                            <th class="p-1 border-r border-black w-20">Net Amount</th>
+                            <th class="p-1 border-r border-black w-20">Value Excl.</th>
+                            <th class="p-1 border-r border-black w-12">Rate</th>
+                            <th class="p-1 border-r border-black w-16">Total Tax</th>
+                            <th class="p-1 w-20">Value Incl.</th>
+                        </tr>
+                        <tr class="border-b border-black text-center text-[9px]">
+                            <td class="border-r border-black">1</td>
+                            <td class="border-r border-black">2</td>
+                            <td class="border-r border-black">3</td>
+                            <td class="border-r border-black">4</td>
+                            <td class="border-r border-black">5</td>
+                            <td class="border-r border-black">6</td>
+                            <td class="border-r border-black">7</td>
+                            <td>8</td>
+                        </tr>
+                    </thead>
+                    <tbody id="stTableBody"></tbody>
+                </table>
+
+                <div class="stamp-space" style="height: 40px;"></div>
+                <div class="border border-black w-48 h-16 p-1 text-[10px] font-bold">Signature:</div>
+            </div>
+        </div>
+
+        <!-- TAB 5: COMPANY MANAGER -->
+        <div id="tab-companies" class="tab-content hidden space-y-4">
+            <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm">
+                <h3 class="font-bold text-slate-800 mb-4">Manage Companies & Automatic Sequences</h3>
+                <div id="companyList" class="space-y-3"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Custom App JS -->
+    <script src="app.js"></script>
 </body>
 </html>
