@@ -1,13 +1,79 @@
-// Pre-loaded Company Profiles & Tax Rules
+// Pre-loaded Companies Data with Editable Fields & Tax Controls
 let companies = [
-    { name: "Al-Madina Enterprises", vendorNo: "30368984", ntn: "2128115-7", stn: "1700212811518", phone: "0300-2216873", address: "B-26, 4th Floor Faraz Avenue, Block-20 Gulistan-e-Jauhar, Karachi", billSeq: 12489, taxType: "GST", taxRate: 18 },
-    { name: "Shaheen Enterprises", vendorNo: "40912841", ntn: "3182941-2", stn: "1700318294119", phone: "0300-1234567", address: "Karachi", billSeq: 5001, taxType: "GST", taxRate: 18 },
-    { name: "HAYAH ENTERPRISES", vendorNo: "51092834", ntn: "4192834-5", stn: "1700419283411", phone: "0321-9876543", address: "Karachi", billSeq: 3001, taxType: "SST", taxRate: 15 },
-    { name: "Comzon", vendorNo: "61209384", ntn: "5129384-6", stn: "1700512938412", phone: "0333-1122334", address: "Karachi", billSeq: 1001, taxType: "GST", taxRate: 18 },
-    { name: "Al Noor", vendorNo: "71829304", ntn: "6182930-7", stn: "1700618293013", phone: "0345-5566778", address: "Karachi", billSeq: 2001, taxType: "GST", taxRate: 18 },
-    { name: "Al Mehran", vendorNo: "81920394", ntn: "7192039-8", stn: "1700719203914", phone: "0312-4455667", address: "Karachi", billSeq: 4001, taxType: "GST", taxRate: 18 },
-    { name: "Rizwan Autoes", vendorNo: "91029384", ntn: "8102938-9", stn: "1700810293815", phone: "0301-7788990", address: "Karachi", billSeq: 6001, taxType: "SST", taxRate: 15 },
-    { name: "Asra Traders", vendorNo: "10928374", ntn: "9092837-0", stn: "1700909283716", phone: "0302-3344556", address: "Karachi", billSeq: 7001, taxType: "GST", taxRate: 18 }
+    { 
+        id: "al-madina",
+        name: "Al-Madina Enterprises", 
+        vendorType: "AGPR", 
+        vendorNo: "30368984", 
+        ntn: "2128115-7", 
+        stn: "1700212811518", 
+        srb: "S1700212811518",
+        phone: "0300-2216873", 
+        address: "B-26, 4th Floor Faraz Avenue, Block-20 Gulistan-e-Jauhar, Karachi", 
+        accountNo: "1234567890",
+        iban: "PK36MEZN0001234567890",
+        email: "almadina@example.com",
+        cnic: "42101-1234567-1",
+        billSeq: 12489, 
+        taxType: "GST", 
+        taxRate: 18,
+        allowTaxToggle: true // Al-Madina can toggle between 18% GST and 15% SST
+    },
+    { 
+        id: "shaheen",
+        name: "Shaheen Enterprises", 
+        vendorType: "AGPR", vendorNo: "40912841", ntn: "3182941-2", stn: "1700318294119", srb: "S1700318294119",
+        phone: "0300-1234567", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "",
+        billSeq: 5001, taxType: "SST", taxRate: 15, allowTaxToggle: false 
+    },
+    { 
+        id: "hayah",
+        name: "HAYAH ENTERPRISES", 
+        vendorType: "AGPR", vendorNo: "51092834", ntn: "4192834-5", stn: "1700419283411", srb: "S1700419283411",
+        phone: "0321-9876543", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "",
+        billSeq: 3001, taxType: "SST", taxRate: 15, allowTaxToggle: false 
+    },
+    { 
+        id: "comzon",
+        name: "Comzon", 
+        vendorType: "AGPR", vendorNo: "61209384", ntn: "5129384-6", stn: "1700512938412", srb: "S1700512938412",
+        phone: "0333-1122334", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "",
+        billSeq: 1001, taxType: "GST", taxRate: 18, allowTaxToggle: false 
+    },
+    { 
+        id: "al-noor",
+        name: "Al Noor", 
+        vendorType: "AGPR", vendorNo: "71829304", ntn: "6182930-7", stn: "1700618293013", srb: "S1700618293013",
+        phone: "0345-5566778", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "",
+        billSeq: 2001, taxType: "SST", taxRate: 15, allowTaxToggle: false 
+    },
+    { 
+        id: "al-mehran",
+        name: "Al Mehran", 
+        vendorType: "AGPR", vendorNo: "81920394", ntn: "7192039-8", stn: "1700719203914", srb: "S1700719203914",
+        phone: "0312-4455667", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "",
+        billSeq: 4001, taxType: "SST", taxRate: 15, allowTaxToggle: false 
+    },
+    { 
+        id: "rizwan",
+        name: "Rizwan Autoes", 
+        vendorType: "AGPR", vendorNo: "91029384", ntn: "8102938-9", stn: "1700810293815", srb: "S1700810293815",
+        phone: "0301-7788990", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "",
+        billSeq: 6001, taxType: "SST", taxRate: 15, allowTaxToggle: false 
+    },
+    { 
+        id: "asra",
+        name: "Asra Traders", 
+        vendorType: "AGPR", vendorNo: "10928374", ntn: "9092837-0", stn: "1700909283716", srb: "S1700909283716",
+        phone: "0302-3344556", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "",
+        billSeq: 7001, taxType: "SST", taxRate: 15, allowTaxToggle: false 
+    }
+];
+
+let departments = [
+    { code: "GPO", name: "Office of the New Town GPO,\nKarachi." },
+    { code: "MOT", name: "Office of the Additional IGP,\nMotorway Police,Karachi." },
+    { code: "CUSTOM", name: "Office of the Collectorate of Customs,\nKarachi." }
 ];
 
 let selectedCompany = companies[0];
@@ -15,17 +81,42 @@ let items = [
     { desc: "LPG Gas Filled for the Month of September-2026", qty: 17, rate: 520 }
 ];
 
-let activeTab = "dashboard";
-
 function init() {
-    populateCompanySelect();
+    populateCompanyDropdowns();
+    populateDepartmentDropdown();
+    renderDepartmentManager();
     renderCompanyManager();
     renderAll();
 
     // Event Listeners
     document.getElementById('companySelect').addEventListener('change', (e) => {
         selectedCompany = companies[e.target.value];
+        document.getElementById('memoCompanyQuickSelect').value = e.target.value;
         renderAll();
+    });
+
+    document.getElementById('memoCompanyQuickSelect').addEventListener('change', (e) => {
+        selectedCompany = companies[e.target.value];
+        document.getElementById('companySelect').value = e.target.value;
+        renderAll();
+    });
+
+    document.getElementById('deptCodeInput').addEventListener('input', (e) => {
+        let code = e.target.value.trim().toUpperCase();
+        let found = departments.find(d => d.code === code);
+        if(found) {
+            document.getElementById('deptInput').value = found.name;
+            renderAll();
+        }
+    });
+
+    document.getElementById('deptSelect').addEventListener('change', (e) => {
+        if(e.target.value !== "") {
+            let dept = departments[e.target.value];
+            document.getElementById('deptCodeInput').value = dept.code;
+            document.getElementById('deptInput').value = dept.name;
+            renderAll();
+        }
     });
 
     document.getElementById('deptInput').addEventListener('input', renderAll);
@@ -34,12 +125,10 @@ function init() {
         document.querySelectorAll('.stamp-space').forEach(el => el.style.height = e.target.value + 'px');
     });
 
-    // Excel Reader
     document.getElementById('excelFile').addEventListener('change', handleExcelUpload);
 }
 
 function switchTab(tabId) {
-    activeTab = tabId;
     document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active-print'));
     
@@ -54,16 +143,57 @@ function switchTab(tabId) {
         'bill-memo': 'Bill / Cash Memo',
         'delivery-challan': 'Delivery Challan (Work Completion)',
         'sales-tax': 'Sales Tax Invoice',
+        'departments': 'Department Manager',
         'companies': 'Company Settings'
     };
     document.getElementById('pageTitle').innerText = titles[tabId];
 }
 
-function populateCompanySelect() {
-    const sel = document.getElementById('companySelect');
-    sel.innerHTML = '';
+function populateCompanyDropdowns() {
+    const sel1 = document.getElementById('companySelect');
+    const sel2 = document.getElementById('memoCompanyQuickSelect');
+    sel1.innerHTML = '';
+    sel2.innerHTML = '';
     companies.forEach((c, idx) => {
-        sel.innerHTML += `<option value="${idx}">${c.name}</option>`;
+        sel1.innerHTML += `<option value="${idx}">${c.name}</option>`;
+        sel2.innerHTML += `<option value="${idx}">${c.name}</option>`;
+    });
+}
+
+function populateDepartmentDropdown() {
+    const sel = document.getElementById('deptSelect');
+    sel.innerHTML = '<option value="">Select Saved Department...</option>';
+    departments.forEach((d, idx) => {
+        sel.innerHTML += `<option value="${idx}">${d.code} - ${d.name.split('\n')[0]}</option>`;
+    });
+}
+
+function addDepartment() {
+    let code = document.getElementById('newDeptCode').value.trim().toUpperCase();
+    let name = document.getElementById('newDeptName').value.trim();
+    if(code && name) {
+        departments.push({ code, name });
+        populateDepartmentDropdown();
+        renderDepartmentManager();
+        document.getElementById('newDeptCode').value = '';
+        document.getElementById('newDeptName').value = '';
+        alert("Department successfully added!");
+    }
+}
+
+function renderDepartmentManager() {
+    const container = document.getElementById('departmentList');
+    container.innerHTML = '';
+    departments.forEach((d, idx) => {
+        container.innerHTML += `
+            <div class="flex items-center justify-between p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                <div>
+                    <span class="font-bold text-xs bg-amber-200 text-amber-900 px-2 py-1 rounded mr-2">${d.code}</span>
+                    <span class="text-xs font-medium text-slate-800">${d.name.replace('\n', ' ')}</span>
+                </div>
+                <button onclick="departments.splice(${idx},1); populateDepartmentDropdown(); renderDepartmentManager();" class="text-rose-600 font-bold text-xs hover:underline">Remove</button>
+            </div>
+        `;
     });
 }
 
@@ -88,6 +218,7 @@ function renderAll() {
     // Bill Memo Updates
     document.getElementById('memoDept').innerText = dept;
     document.getElementById('memoBillNo').innerText = selectedCompany.billSeq;
+    document.getElementById('memoVendorLabel').innerText = (selectedCompany.vendorType === 'AGPR' ? 'Vender #:' : 'AG Sindh #:');
     document.getElementById('memoVendorNo').innerText = selectedCompany.vendorNo;
     document.getElementById('memoNTN').innerText = selectedCompany.ntn;
     document.getElementById('memoSTN').innerText = selectedCompany.stn;
@@ -190,19 +321,80 @@ function renderCompanyManager() {
     container.innerHTML = '';
     companies.forEach((c, idx) => {
         container.innerHTML += `
-            <div class="flex flex-wrap items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-xl gap-2">
-                <div>
-                    <h4 class="font-bold text-sm text-slate-800">${c.name}</h4>
-                    <p class="text-xs text-slate-500">NTN: ${c.ntn} | Tax: ${c.taxRate}% ${c.taxType}</p>
+            <div class="p-5 bg-slate-50 border border-slate-200 rounded-xl space-y-4">
+                <div class="flex flex-wrap justify-between items-center border-b pb-2">
+                    <h4 class="font-bold text-base text-slate-900">${c.name}</h4>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold text-slate-600">Next Bill #:</span>
+                        <input type="number" value="${c.billSeq}" onchange="companies[${idx}].billSeq = parseInt(this.value); renderAll();" class="w-24 border border-slate-300 rounded-lg p-1 text-xs text-center font-bold bg-white">
+                    </div>
                 </div>
-                <div class="flex items-center gap-3">
-                    <label class="text-xs font-bold text-slate-600">Next Bill #:</label>
-                    <input type="number" value="${c.billSeq}" onchange="companies[${idx}].billSeq = parseInt(this.value); renderAll();" class="w-24 border border-slate-300 rounded-lg p-1 text-xs text-center font-bold">
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
+                    <div>
+                        <label class="block font-bold text-slate-600 mb-1">Vendor Type</label>
+                        <select onchange="companies[${idx}].vendorType = this.value; renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 font-bold bg-white">
+                            <option value="AGPR" ${c.vendorType === 'AGPR' ? 'selected' : ''}>AGPR Number</option>
+                            <option value="AG Sindh" ${c.vendorType === 'AG Sindh' ? 'selected' : ''}>AG Sindh Number</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-600 mb-1">Vendor / AG #</label>
+                        <input type="text" value="${c.vendorNo}" oninput="companies[${idx}].vendorNo = this.value; renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-600 mb-1">NTN #</label>
+                        <input type="text" value="${c.ntn}" oninput="companies[${idx}].ntn = this.value; renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-600 mb-1">STN / Sale Tax #</label>
+                        <input type="text" value="${c.stn}" oninput="companies[${idx}].stn = this.value; renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
+                    <div>
+                        <label class="block font-bold text-slate-600 mb-1">SRB #</label>
+                        <input type="text" value="${c.srb}" oninput="companies[${idx}].srb = this.value; renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-600 mb-1">Mobile #</label>
+                        <input type="text" value="${c.phone}" oninput="companies[${idx}].phone = this.value; renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-600 mb-1">Tax Rule & Rate</label>
+                        ${c.allowTaxToggle ? `
+                            <select onchange="companies[${idx}].taxType = this.value; companies[${idx}].taxRate = (this.value==='GST'?18:15); renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 font-bold bg-white text-orange-600">
+                                <option value="GST" ${c.taxType === 'GST' ? 'selected' : ''}>18% GST (Sales Tax)</option>
+                                <option value="SST" ${c.taxType === 'SST' ? 'selected' : ''}>15% SST (Services)</option>
+                            </select>
+                        ` : `
+                            <input type="text" disabled value="${c.taxRate}% ${c.taxType} (Fixed)" class="w-full border border-slate-200 rounded-lg p-1.5 bg-slate-100 font-bold text-slate-500">
+                        `}
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-600 mb-1">Email Address</label>
+                        <input type="text" value="${c.email}" oninput="companies[${idx}].email = this.value; renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs border-t pt-3">
+                    <div>
+                        <label class="block font-bold text-slate-600 mb-1">Account #</label>
+                        <input type="text" value="${c.accountNo}" oninput="companies[${idx}].accountNo = this.value; renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-600 mb-1">IBAN #</label>
+                        <input type="text" value="${c.iban}" oninput="companies[${idx}].iban = this.value; renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-600 mb-1">CNIC #</label>
+                        <input type="text" value="${c.cnic}" oninput="companies[${idx}].cnic = this.value; renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
+                    </div>
                 </div>
             </div>
         `;
     });
 }
 
-// Initialize application
 window.onload = init;
