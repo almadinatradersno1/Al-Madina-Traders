@@ -37,6 +37,9 @@
                 <button onclick="switchTab('sales-tax')" id="nav-sales-tax" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition text-slate-600 hover:bg-amber-50 hover:text-amber-900">
                     <span>📄</span> Sales Tax Invoice
                 </button>
+                <button onclick="switchTab('history')" id="nav-history" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition text-slate-600 hover:bg-amber-50 hover:text-amber-900">
+                    <span>📜</span> Billing History
+                </button>
                 <button onclick="switchTab('departments')" id="nav-departments" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition text-slate-600 hover:bg-amber-50 hover:text-amber-900">
                     <span>🏢</span> Departments
                 </button>
@@ -47,7 +50,7 @@
         </div>
 
         <div class="border-t border-slate-100 pt-4 text-center">
-            <p class="text-xs text-slate-400">Enterprise Invoicing v2.8</p>
+            <p class="text-xs text-slate-400">Enterprise Invoicing v3.0</p>
         </div>
     </aside>
 
@@ -62,8 +65,8 @@
             </div>
             
             <div class="flex items-center gap-3">
-                <button onclick="window.print()" class="bg-orange-600 hover:bg-orange-700 text-white font-semibold text-sm px-5 py-2.5 rounded-xl shadow-md transition flex items-center gap-2">
-                    🖨️ Print Active View
+                <button onclick="triggerPrintAndSave()" class="bg-orange-600 hover:bg-orange-700 text-white font-semibold text-sm px-5 py-2.5 rounded-xl shadow-md transition flex items-center gap-2">
+                    🖨️ Print & Save Record
                 </button>
             </div>
         </div>
@@ -107,24 +110,40 @@
                 </div>
                 <input type="file" id="excelFile" accept=".xlsx, .xls, .csv" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-amber-100 file:text-amber-800 hover:file:bg-amber-200 cursor-pointer">
             </div>
+        </div>
 
-            <!-- Basic Info Form -->
-            <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm space-y-4">
-                <h4 class="font-bold text-slate-800 text-sm uppercase tracking-wider border-b pb-2">Invoice & Department Controls</h4>
+        <!-- TAB 2: BILL / CASH MEMO -->
+        <div id="tab-bill-memo" class="tab-content hidden space-y-6">
+            <!-- INVOICE & DEPARTMENT CONTROLS (Merged Right Above Printed Bill) -->
+            <div class="max-w-4xl mx-auto bg-white p-6 rounded-2xl border border-amber-200 shadow-sm space-y-4 no-print">
+                <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider border-b pb-2 flex justify-between items-center">
+                    <span>INVOICE & DEPARTMENT CONTROLS</span>
+                    <span id="activeQuarterBadge" class="bg-amber-100 text-amber-900 font-extrabold px-2.5 py-1 rounded-md text-[10px]">1st Qtr Active</span>
+                </h4>
                 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-600 mb-1">Company Letterhead</label>
-                        <select id="companySelect" class="w-full border border-slate-200 rounded-xl p-2.5 text-sm font-medium focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                        <select id="companySelect" class="w-full border border-slate-200 rounded-xl p-2 text-xs font-bold focus:ring-2 focus:ring-amber-500 focus:outline-none">
                             <!-- Populated dynamically -->
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Quarter Selector</label>
+                        <select id="quarterSelect" class="w-full border border-slate-200 rounded-xl p-2 text-xs font-bold bg-amber-50 focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                            <option value="1st Qtr">1st Quarter (Jul - Sep)</option>
+                            <option value="2nd Qtr">2nd Quarter (Oct - Dec)</option>
+                            <option value="3rd Qtr">3rd Quarter (Jan - Mar)</option>
+                            <option value="4th Qtr">4th Quarter (Apr - Jun)</option>
                         </select>
                     </div>
 
                     <div>
                         <label class="block text-xs font-bold text-slate-600 mb-1">Department Code / Quick Pick</label>
                         <div class="flex gap-2">
-                            <input type="text" id="deptCodeInput" placeholder="Enter Code (e.g. GPO)" class="w-1/3 border border-slate-200 rounded-xl p-2.5 text-sm font-bold uppercase focus:ring-2 focus:ring-amber-500 focus:outline-none">
-                            <select id="deptSelect" class="w-2/3 border border-slate-200 rounded-xl p-2.5 text-sm font-medium focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                            <input type="text" id="deptCodeInput" placeholder="Code" class="w-1/3 border border-slate-200 rounded-xl p-2 text-xs font-bold uppercase focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                            <select id="deptSelect" class="w-2/3 border border-slate-200 rounded-xl p-2 text-xs font-medium focus:ring-2 focus:ring-amber-500 focus:outline-none">
                                 <!-- Populated dynamically -->
                             </select>
                         </div>
@@ -138,21 +157,11 @@
 
                 <div>
                     <label class="block text-xs font-bold text-slate-600 mb-1">Department Full Name (Active on Printed Invoices)</label>
-                    <textarea id="deptInput" rows="2" class="w-full border border-slate-200 rounded-xl p-2.5 text-sm font-medium focus:ring-2 focus:ring-amber-500 focus:outline-none"></textarea>
+                    <textarea id="deptInput" rows="2" class="w-full border border-slate-200 rounded-xl p-2 text-xs font-medium focus:ring-2 focus:ring-amber-500 focus:outline-none"></textarea>
                 </div>
             </div>
-        </div>
 
-        <!-- TAB 2: BILL / CASH MEMO -->
-        <div id="tab-bill-memo" class="tab-content hidden">
-            <!-- Top Quick Switcher for Bill Memo -->
-            <div class="max-w-4xl mx-auto mb-4 bg-white p-4 rounded-xl border border-amber-200 shadow-sm flex items-center justify-between no-print">
-                <span class="text-xs font-bold text-slate-700">Select Company for Bill Print:</span>
-                <select id="memoCompanyQuickSelect" class="border border-slate-300 rounded-lg p-2 text-xs font-bold text-slate-800 bg-amber-50 focus:ring-2 focus:ring-amber-500">
-                    <!-- Populated dynamically -->
-                </select>
-            </div>
-
+            <!-- PRINTABLE BILL SHEET -->
             <div class="max-w-4xl mx-auto bg-white p-10 rounded-2xl shadow-sm border border-amber-100 print-container">
                 <div class="flex justify-between items-start border-b-2 border-black pb-3 mb-4">
                     <div>
@@ -311,12 +320,38 @@
             </div>
         </div>
 
-        <!-- TAB 5: DEPARTMENT MANAGER -->
+        <!-- TAB 5: BILLING HISTORY -->
+        <div id="tab-history" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm space-y-4">
+                <div class="flex justify-between items-center border-b pb-3">
+                    <h3 class="font-bold text-slate-800 text-base">Generated Invoices History Database</h3>
+                    <button onclick="clearHistory()" class="text-rose-600 font-bold text-xs hover:underline">Clear History</button>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-xs text-left">
+                        <thead class="bg-slate-100 uppercase font-bold text-slate-600">
+                            <tr>
+                                <th class="p-3">Date</th>
+                                <th class="p-3">Quarter</th>
+                                <th class="p-3">Bill #</th>
+                                <th class="p-3">Company</th>
+                                <th class="p-3">Department</th>
+                                <th class="p-3 text-right">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody" class="divide-y divide-slate-100 font-medium"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 6: DEPARTMENT MANAGER -->
         <div id="tab-departments" class="tab-content hidden space-y-6">
             <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm space-y-4">
                 <h3 class="font-bold text-slate-800">Add / Edit Department Shortcuts</h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <input type="text" id="newDeptCode" placeholder="Code (e.g. GPO)" class="border border-slate-200 rounded-xl p-2.5 text-sm font-bold uppercase">
+                    <input type="text" id="newDeptCode" placeholder="Code (e.g. KA3371)" class="border border-slate-200 rounded-xl p-2.5 text-sm font-bold uppercase">
                     <input type="text" id="newDeptName" placeholder="Full Department Address / Name" class="md:col-span-2 border border-slate-200 rounded-xl p-2.5 text-sm">
                 </div>
                 <div class="flex gap-4 items-center">
@@ -329,12 +364,12 @@
             </div>
 
             <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm">
-                <h4 class="font-bold text-slate-800 mb-4 text-sm">Saved Departments List</h4>
+                <h4 class="font-bold text-slate-800 mb-4 text-sm">Saved Departments List (Permanently Stored)</h4>
                 <div id="departmentList" class="space-y-2"></div>
             </div>
         </div>
 
-        <!-- TAB 6: COMPANY MANAGER -->
+        <!-- TAB 7: COMPANY MANAGER -->
         <div id="tab-companies" class="tab-content hidden space-y-4">
             <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm">
                 <h3 class="font-bold text-slate-800 mb-4">Manage Companies, Tax Rules & Official Details</h3>
