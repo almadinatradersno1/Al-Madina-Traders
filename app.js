@@ -1,12 +1,12 @@
 let defaultCompanies = [
-    { id: "al-madina", name: "Al-Madina Enterprises", vendorType: "AGPR", vendorNo: "30368984", ntn: "2128115-7", stn: "1700212811518", srb: "S1700212811518", phone: "0300-2216873", address: "B-26, 4th Floor Faraz Avenue, Block-20 Gulistan-e-Jauhar, Karachi", accountNo: "1234567890", iban: "PK36MEZN0001234567890", email: "almadina@example.com", cnic: "42101-1234567-1", billSeq: 12489, taxType: "GST", taxRate: 18, allowTaxToggle: true },
-    { id: "shaheen", name: "Shaheen Enterprises", vendorType: "AGPR", vendorNo: "40912841", ntn: "3182941-2", stn: "1700318294119", srb: "S1700318294119", phone: "0300-1234567", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "", billSeq: 5001, taxType: "SST", taxRate: 15, allowTaxToggle: false },
-    { id: "hayah", name: "HAYAH ENTERPRISES", vendorType: "AGPR", vendorNo: "51092834", ntn: "4192834-5", stn: "1700419283411", srb: "S1700419283411", phone: "0321-9876543", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "", billSeq: 3001, taxType: "SST", taxRate: 15, allowTaxToggle: false },
-    { id: "comzon", name: "Comzon", vendorType: "AGPR", vendorNo: "61209384", ntn: "5129384-6", stn: "1700512938412", srb: "S1700512938412", phone: "0333-1122334", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "", billSeq: 1001, taxType: "GST", taxRate: 18, allowTaxToggle: false },
-    { id: "al-noor", name: "Al Noor", vendorType: "AGPR", vendorNo: "71829304", ntn: "6182930-7", stn: "1700618293013", srb: "S1700618293013", phone: "0345-5566778", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "", billSeq: 2001, taxType: "SST", taxRate: 15, allowTaxToggle: false },
-    { id: "al-mehran", name: "Al Mehran", vendorType: "AGPR", vendorNo: "81920394", ntn: "7192039-8", stn: "1700719203914", srb: "S1700719203914", phone: "0312-4455667", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "", billSeq: 4001, taxType: "SST", taxRate: 15, allowTaxToggle: false },
-    { id: "rizwan", name: "Rizwan Autoes", vendorType: "AGPR", vendorNo: "91029384", ntn: "8102938-9", stn: "1700810293815", srb: "S1700810293815", phone: "0301-7788990", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "", billSeq: 6001, taxType: "SST", taxRate: 15, allowTaxToggle: false },
-    { id: "asra", name: "Asra Traders", vendorType: "AGPR", vendorNo: "10928374", ntn: "9092837-0", stn: "1700909283716", srb: "S1700909283716", phone: "0302-3344556", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "", billSeq: 7001, taxType: "SST", taxRate: 15, allowTaxToggle: false }
+    { id: "al-madina", name: "Al-Madina Enterprises", vendorType: "AGPR", vendorNo: "30368984", ntn: "2128115-7", stn: "1700212811518", srb: "S1700212811518", phone: "0300-2216873", address: "B-26, 4th Floor Faraz Avenue, Block-20 Gulistan-e-Jauhar, Karachi", accountNo: "1234567890", iban: "PK36MEZN0001234567890", email: "almadina@example.com", cnic: "42101-1234567-1", billSeq: 12489, stSerial: 6819, taxType: "GST", taxRate: 18, allowTaxToggle: true },
+    { id: "shaheen", name: "Shaheen Enterprises", vendorType: "AGPR", vendorNo: "40912841", ntn: "3182941-2", stn: "1700318294119", srb: "S1700318294119", phone: "0300-1234567", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "", billSeq: 5001, stSerial: 501, taxType: "SST", taxRate: 15, allowTaxToggle: false },
+    { id: "hayah", name: "HAYAH ENTERPRISES", vendorType: "AGPR", vendorNo: "51092834", ntn: "4192834-5", stn: "1700419283411", srb: "S1700419283411", phone: "0321-9876543", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "", billSeq: 3001, stSerial: 301, taxType: "SST", taxRate: 15, allowTaxToggle: false },
+    { id: "comzon", name: "Comzon", vendorType: "AGPR", vendorNo: "61209384", ntn: "5129384-6", stn: "1700512938412", srb: "S1700512938412", phone: "0333-1122334", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "", billSeq: 1001, stSerial: 101, taxType: "GST", taxRate: 18, allowTaxToggle: false },
+    { id: "al-noor", name: "Al Noor", vendorType: "AGPR", vendorNo: "71829304", ntn: "6182930-7", stn: "1700618293013", srb: "S1700618293013", phone: "0345-5566778", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "", billSeq: 2001, stSerial: 201, taxType: "SST", taxRate: 15, allowTaxToggle: false },
+    { id: "al-mehran", name: "Al Mehran", vendorType: "AGPR", vendorNo: "81920394", ntn: "7192039-8", stn: "1700719203914", srb: "S1700719203914", phone: "0312-4455667", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "", billSeq: 4001, stSerial: 401, taxType: "SST", taxRate: 15, allowTaxToggle: false },
+    { id: "rizwan", name: "Rizwan Autoes", vendorType: "AGPR", vendorNo: "91029384", ntn: "8102938-9", stn: "1700810293815", srb: "S1700810293815", phone: "0301-7788990", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "", billSeq: 6001, stSerial: 601, taxType: "SST", taxRate: 15, allowTaxToggle: false },
+    { id: "asra", name: "Asra Traders", vendorType: "AGPR", vendorNo: "10928374", ntn: "9092837-0", stn: "1700909283716", srb: "S1700909283716", phone: "0302-3344556", address: "Karachi", accountNo: "", iban: "", email: "", cnic: "", billSeq: 7001, stSerial: 701, taxType: "SST", taxRate: 15, allowTaxToggle: false }
 ];
 
 let defaultDepartments = [
@@ -15,7 +15,6 @@ let defaultDepartments = [
     { code: "MOT", name: "Office of the Additional IGP,\nMotorway Police,Karachi." }
 ];
 
-// Persistent Local Storage Loaders
 let companies = JSON.parse(localStorage.getItem('portal_companies')) || defaultCompanies;
 let departments = JSON.parse(localStorage.getItem('portal_departments')) || defaultDepartments;
 let invoiceHistory = JSON.parse(localStorage.getItem('portal_history')) || [];
@@ -95,6 +94,16 @@ function switchTab(tabId) {
     document.querySelectorAll('nav button').forEach(el => el.classList.remove('active-tab'));
     document.getElementById('nav-' + tabId).classList.add('active-tab');
 
+    // Show Print & Save button ONLY on Bill / Cash Memo tab
+    const printAction = document.getElementById('headerPrintAction');
+    if(tabId === 'bill-memo') {
+        printAction.classList.remove('hidden');
+        printAction.classList.add('flex');
+    } else {
+        printAction.classList.remove('flex');
+        printAction.classList.add('hidden');
+    }
+
     const titles = {
         'dashboard': 'Portal Overview',
         'bill-memo': 'Bill / Cash Memo Generator',
@@ -111,7 +120,7 @@ function populateCompanyDropdowns() {
     const sel1 = document.getElementById('companySelect');
     sel1.innerHTML = '';
     companies.forEach((c, idx) => {
-        sel1.innerHTML += `<option value="${idx}">${c.name} (Next Bill #: ${c.billSeq})</option>`;
+        sel1.innerHTML += `<option value="${idx}">${c.name} (Bill #: ${c.billSeq})</option>`;
     });
 }
 
@@ -200,8 +209,9 @@ function triggerPrintAndSave() {
         amount: Math.round(grandTotal)
     });
 
-    // Auto Increment Bill Sequence
+    // Auto Increment Bill & ST Serial Sequences
     selectedCompany.billSeq++;
+    selectedCompany.stSerial++;
     saveCompaniesToStorage();
     saveHistoryToStorage();
     populateCompanyDropdowns();
@@ -302,8 +312,8 @@ function renderAll() {
         `;
     });
 
-    // Sales Tax Invoice Dynamic Adaptation
-    document.getElementById('stSerial').innerText = selectedCompany.billSeq;
+    // Sales Tax Invoice Dynamic Adaptation (Using Company's assigned ST Serial No)
+    document.getElementById('stSerial').innerText = selectedCompany.stSerial;
     document.getElementById('stDate').innerText = new Date().toLocaleDateString('en-GB');
     document.getElementById('stSupplierAddr').innerText = selectedCompany.address;
     document.getElementById('stSupplierPhone').innerText = selectedCompany.phone;
@@ -386,11 +396,17 @@ function renderCompanyManager() {
     companies.forEach((c, idx) => {
         container.innerHTML += `
             <div class="p-5 bg-slate-50 border border-slate-200 rounded-xl space-y-4">
-                <div class="flex flex-wrap justify-between items-center border-b pb-2">
+                <div class="flex flex-wrap justify-between items-center border-b pb-2 gap-2">
                     <h4 class="font-bold text-base text-slate-900">${c.name}</h4>
-                    <div class="flex items-center gap-2">
-                        <span class="text-xs font-bold text-slate-600">Next Bill #:</span>
-                        <input type="number" value="${c.billSeq}" onchange="companies[${idx}].billSeq = parseInt(this.value); saveCompaniesToStorage(); populateCompanyDropdowns(); renderAll();" class="w-24 border border-slate-300 rounded-lg p-1 text-xs text-center font-bold bg-white">
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-bold text-slate-600">Next Bill #:</span>
+                            <input type="number" value="${c.billSeq}" onchange="companies[${idx}].billSeq = parseInt(this.value); saveCompaniesToStorage(); populateCompanyDropdowns(); renderAll();" class="w-20 border border-slate-300 rounded-lg p-1 text-xs text-center font-bold bg-white">
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-bold text-slate-600">ST Serial #:</span>
+                            <input type="number" value="${c.stSerial}" onchange="companies[${idx}].stSerial = parseInt(this.value); saveCompaniesToStorage(); renderAll();" class="w-20 border border-slate-300 rounded-lg p-1 text-xs text-center font-bold bg-white">
+                        </div>
                     </div>
                 </div>
 
@@ -448,7 +464,7 @@ function renderCompanyManager() {
                         <input type="text" value="${c.accountNo}" oninput="companies[${idx}].accountNo = this.value; saveCompaniesToStorage(); renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
                     </div>
                     <div>
-                        <label class="block font-bold text-slate-600 mb-1">IBAN #</label>
+                        <label class="page-title block font-bold text-slate-600 mb-1">IBAN #</label>
                         <input type="text" value="${c.iban}" oninput="companies[${idx}].iban = this.value; saveCompaniesToStorage(); renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
                     </div>
                     <div>
