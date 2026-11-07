@@ -1,4 +1,3 @@
-// Pre-loaded Companies Data with Editable Fields & Tax Controls
 let companies = [
     { 
         id: "al-madina",
@@ -17,7 +16,7 @@ let companies = [
         billSeq: 12489, 
         taxType: "GST", 
         taxRate: 18,
-        allowTaxToggle: true // Al-Madina can toggle between 18% GST and 15% SST
+        allowTaxToggle: true 
     },
     { 
         id: "shaheen",
@@ -88,7 +87,6 @@ function init() {
     renderCompanyManager();
     renderAll();
 
-    // Event Listeners
     document.getElementById('companySelect').addEventListener('change', (e) => {
         selectedCompany = companies[e.target.value];
         document.getElementById('memoCompanyQuickSelect').value = e.target.value;
@@ -126,6 +124,7 @@ function init() {
     });
 
     document.getElementById('excelFile').addEventListener('change', handleExcelUpload);
+    document.getElementById('deptExcelFile').addEventListener('change', handleDeptExcelUpload);
 }
 
 function switchTab(tabId) {
@@ -155,7 +154,7 @@ function populateCompanyDropdowns() {
     sel1.innerHTML = '';
     sel2.innerHTML = '';
     companies.forEach((c, idx) => {
-        sel1.innerHTML += `<option value="${idx}">${c.name}</option>`;
+        sel1.innerHTML += `<option value="${idx}">${c.name} (Next Bill #: ${c.billSeq})</option>`;
         sel2.innerHTML += `<option value="${idx}">${c.name}</option>`;
     });
 }
@@ -179,6 +178,35 @@ function addDepartment() {
         document.getElementById('newDeptName').value = '';
         alert("Department successfully added!");
     }
+}
+
+function handleDeptExcelUpload(e) {
+    let file = e.target.files[0];
+    if (!file) return;
+
+    let reader = new FileReader();
+    reader.onload = function(e) {
+        let data = new Uint8Array(e.target.result);
+        let workbook = XLSX.read(data, {type: 'array'});
+        let json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {header: 1});
+
+        let count = 0;
+        for(let i = 0; i < json.length; i++) {
+            let row = json[i];
+            if(row.length >= 2 && row[0] && row[1]) {
+                let code = String(row[0]).trim().toUpperCase();
+                let name = String(row[1]).trim();
+                if(!departments.some(d => d.code === code)) {
+                    departments.push({ code, name });
+                    count++;
+                }
+            }
+        }
+        populateDepartmentDropdown();
+        renderDepartmentManager();
+        alert(`${count} departments imported successfully from Excel!`);
+    };
+    reader.readAsArrayBuffer(file);
 }
 
 function renderDepartmentManager() {
@@ -258,13 +286,33 @@ function renderAll() {
         `;
     });
 
-    // Sales Tax Updates
+    // Sales Tax Invoice Dynamic Adaptation (15% SST vs 18% GST)
     document.getElementById('stSerial').innerText = selectedCompany.billSeq;
     document.getElementById('stDate').innerText = new Date().toLocaleDateString('en-GB');
     document.getElementById('stSupplierAddr').innerText = selectedCompany.address;
     document.getElementById('stSupplierPhone').innerText = selectedCompany.phone;
     document.getElementById('stSupplierSTN').innerText = selectedCompany.stn;
     document.getElementById('stBuyerName').innerText = dept;
+
+    const mainTitle = document.getElementById('stMainTitle');
+    const thExcl = document.getElementById('thColExcl');
+    const thRate = document.getElementById('thColRate');
+    const thTax = document.getElementById('thColTax');
+    const thIncl = document.getElementById('thColIncl');
+
+    if(selectedCompany.taxType === 'SST') {
+        mainTitle.innerText = `${selectedCompany.taxRate}% SINDH SALES TAX INVOICE`;
+        thExcl.innerText = `Value Excluding Sindh Sales Tax`;
+        thRate.innerText = `Rate of Sindh Sales Tax`;
+        thTax.innerText = `Total Sindh Sales Tax Payable`;
+        thIncl.innerText = `Value including Sindh Sales Tax`;
+    } else {
+        mainTitle.innerText = `${selectedCompany.taxRate}% SALES TAX INVOICE`;
+        thExcl.innerText = `Value Excl.`;
+        thRate.innerText = `Rate`;
+        thTax.innerText = `Total Sales Tax`;
+        thIncl.innerText = `Value Incl.`;
+    }
 
     const stBody = document.getElementById('stTableBody');
     stBody.innerHTML = '';
@@ -308,7 +356,7 @@ function handleExcelUpload(e) {
         if(parsed.length > 0) {
             items = parsed;
             renderAll();
-            alert("Excel data read successfully!");
+            alert("Excel invoice items loaded successfully!");
         } else {
             alert("Formatting error. Make sure columns are Description, Quantity, Rate.");
         }
@@ -326,7 +374,7 @@ function renderCompanyManager() {
                     <h4 class="font-bold text-base text-slate-900">${c.name}</h4>
                     <div class="flex items-center gap-2">
                         <span class="text-xs font-bold text-slate-600">Next Bill #:</span>
-                        <input type="number" value="${c.billSeq}" onchange="companies[${idx}].billSeq = parseInt(this.value); renderAll();" class="w-24 border border-slate-300 rounded-lg p-1 text-xs text-center font-bold bg-white">
+                        <input type="number" value="${c.billSeq}" onchange="companies[${idx}].billSeq = parseInt(this.value); populateCompanyDropdowns(); renderAll();" class="w-24 border border-slate-300 rounded-lg p-1 text-xs text-center font-bold bg-white">
                     </div>
                 </div>
 
