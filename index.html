@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Al-Madina Enterprises - Invoice Generator Dashboard</title>
+    <!-- SheetJS for Excel / CSV Parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- Tailwind CSS for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @media print {
+            body {
+                background: white !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-container {
+                box-shadow: none !important;
+                border: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen p-4 md:p-8">
+
+    <!-- Top Control / Dashboard Panel (Hidden on Print) -->
+    <div class="max-w-4xl mx-auto mb-8 bg-white p-6 rounded-xl shadow-md no-print">
+        <h1 class="text-2xl font-bold text-slate-900 mb-4">🚀 Office Billing & Invoice Dashboard</h1>
+        <p class="text-sm text-slate-600 mb-6">Excel file upload karein ya data enter karein. Ek click me print formatting aur automatic calculation paein!</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <!-- File Upload -->
+            <div class="border-2 border-dashed border-slate-300 p-4 rounded-lg text-center hover:border-blue-500 transition">
+                <label class="block text-sm font-semibold mb-2 text-slate-700">📁 Upload Excel / CSV</label>
+                <input type="file" id="excelFile" accept=".xlsx, .xls, .csv" class="text-xs text-slate-500 w-full file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
+            </div>
+
+            <!-- Department Quick Select -->
+            <div>
+                <label class="block text-sm font-semibold mb-2 text-slate-700">🏢 Department Shortcut</label>
+                <select id="deptSelect" class="w-full border border-slate-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-blue-500">
+                    <option value="Office of the New Town GPO, Karachi">New Town GPO, Karachi</option>
+                    <option value="Office of the General Post Office, Karachi">General Post Office (GPO)</option>
+                    <option value="Custom Department / Other">Custom Department</option>
+                </select>
+            </div>
+
+            <!-- Stamp & Signature Gap Adjustment -->
+            <div>
+                <label class="block text-sm font-semibold mb-2 text-slate-700">✍️ Stamp Gap Adjuster (<span id="gapVal">80</span>px)</label>
+                <input type="range" id="stampGap" min="20" max="250" value="80" class="w-full accent-blue-600 cursor-pointer">
+            </div>
+        </div>
+
+        <div class="flex flex-wrap gap-4 items-center justify-between border-t pt-4">
+            <div class="flex gap-2">
+                <button onclick="addRow()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm px-4 py-2 rounded-lg font-medium transition">+ Add Row</button>
+                <button onclick="clearData()" class="bg-rose-50 hover:bg-rose-100 text-rose-600 text-sm px-4 py-2 rounded-lg font-medium transition">Clear All</button>
+            </div>
+            <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold shadow transition flex items-center gap-2">
+                🖨️ Print / Save PDF
+            </button>
+        </div>
+    </div>
+
+    <!-- Printable Invoice Sheet -->
+    <div class="max-w-4xl mx-auto bg-white p-8 md:p-12 rounded-xl shadow-lg print-container border border-slate-200">
+        
+        <!-- Header Section -->
+        <div class="flex justify-between items-start border-b-2 border-black pb-4 mb-6">
+            <div>
+                <p class="text-sm font-bold uppercase tracking-wide">To,</p>
+                <div id="departmentOutput" class="text-sm font-medium mt-1 max-w-xs whitespace-pre-line">Office of the New Town GPO,
+Karachi.</div>
+            </div>
+            <div class="border-2 border-black p-3 text-xs font-mono space-y-1 bg-slate-50 min-w-[220px]">
+                <div class="flex justify-between"><span>Bill #:</span> <input type="text" id="billNo" value="12489" class="font-bold bg-transparent text-right w-20 focus:outline-none border-b border-dashed border-black"></div>
+                <div class="flex justify-between"><span>Vender #:</span> <input type="text" id="venderNo" value="30368984" class="font-bold bg-transparent text-right w-20 focus:outline-none border-b border-dashed border-black"></div>
+                <div class="flex justify-between"><span>NTN #:</span> <span class="font-bold">2128115-7</span></div>
+                <div class="flex justify-between"><span>Sale Tax #:</span> <span class="font-bold">1700212811518</span></div>
+            </div>
+        </div>
+
+        <!-- Title Section -->
+        <div class="text-center mb-6">
+            <h2 class="text-lg font-black tracking-widest border-2 border-black py-1 inline-block px-8 uppercase bg-slate-50">BILL / CASH MEMO</h2>
+            <p class="text-xs font-bold tracking-wider mt-1 uppercase text-slate-600">OTHER ITEMS</p>
+        </div>
+
+        <!-- Items Table -->
+        <table class="w-full mb-6 border-collapse text-sm">
+            <thead>
+                <tr class="border-y-2 border-black">
+                    <th class="py-2 px-2 text-center w-12 border-x border-black">S. #</th>
+                    <th class="py-2 px-4 text-left border-x border-black">Description</th>
+                    <th class="py-2 px-2 text-center w-20 border-x border-black">Qty</th>
+                    <th class="py-2 px-3 text-right w-28 border-x border-black">Rate</th>
+                    <th class="py-2 px-3 text-right w-32 border-x border-black">Amount</th>
+                    <th class="no-print w-10 text-center"></th>
+                </tr>
+            </thead>
+            <tbody id="invoiceTableBody" class="border-b-2 border-black">
+                <!-- Dynamically populated rows -->
+            </tbody>
+        </table>
+
+        <!-- Totals Section -->
+        <div class="flex justify-end mb-8">
+            <table class="w-72 border-2 border-black text-sm">
+                <tr class="border-b border-black">
+                    <td class="p-2 font-bold border-r border-black">Amount</td>
+                    <td id="subTotal" class="p-2 text-right font-bold">0</td>
+                </tr>
+                <tr class="border-b border-black">
+                    <td class="p-2 font-bold border-r border-black">18% GST</td>
+                    <td id="gstTotal" class="p-2 text-right font-bold">0</td>
+                </tr>
+                <tr>
+                    <td class="p-2 font-black border-r border-black">Total Amount</td>
+                    <td id="grandTotal" class="p-2 text-right font-black">0</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Stamp & Sign Footer Space -->
+        <div id="stampArea" style="height: 80px;" class="transition-all"></div>
+        <div class="border-t-2 border-black pt-1 inline-block font-bold text-sm">
+            For Al-Madina Enterprises
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        let items = [
+            { desc: "Dustbin (Medium)", qty: 1, rate: 500 },
+            { desc: "Garbage Bags", qty: 4, rate: 350 },
+            { desc: "Extension Board", qty: 2, rate: 765 },
+            { desc: "Glint Glass Cleaner", qty: 3, rate: 385 },
+            { desc: "LED Bulb 18 Watts", qty: 4, rate: 235 },
+            { desc: "Mop", qty: 2, rate: 900 },
+            { desc: "Vim Dish Wash Powder", qty: 3, rate: 250 }
+        ];
+
+        function renderTable() {
+            const tbody = document.getElementById('invoiceTableBody');
+            tbody.innerHTML = '';
+            
+            let subtotal = 0;
+
+            items.forEach((item, index) => {
+                let amount = item.qty * item.rate;
+                subtotal += amount;
+
+                let tr = document.createElement('tr');
+                tr.className = 'border-b border-dashed border-slate-400';
+                tr.innerHTML = `
+                    <td class="py-2 px-2 text-center border-x border-black font-mono">${index + 1}</td>
+                    <td class="py-2 px-4 border-x border-black"><input type="text" value="${item.desc}" oninput="updateItem(${index}, 'desc', this.value)" class="w-full bg-transparent focus:outline-none"></td>
+                    <td class="py-2 px-2 text-center border-x border-black"><input type="number" value="${item.qty}" oninput="updateItem(${index}, 'qty', this.value)" class="w-full text-center bg-transparent focus:outline-none"></td>
+                    <td class="py-2 px-3 text-right border-x border-black"><input type="number" value="${item.rate}" oninput="updateItem(${index}, 'rate', this.value)" class="w-full text-right bg-transparent focus:outline-none"></td>
+                    <td class="py-2 px-3 text-right border-x border-black font-mono">${amount.toLocaleString()}</td>
+                    <td class="no-print text-center"><button onclick="deleteRow(${index})" class="text-rose-600 font-bold hover:text-rose-800">×</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            let gst = subtotal * 0.18;
+            let grandTotal = subtotal + gst;
+
+            document.getElementById('subTotal').innerText = subtotal.toLocaleString();
+            document.getElementById('gstTotal').innerText = Math.round(gst).toLocaleString();
+            document.getElementById('grandTotal').innerText = Math.round(grandTotal).toLocaleString();
+        }
+
+        function updateItem(index, field, value) {
+            if (field === 'qty' || field === 'rate') {
+                items[index][field] = parseFloat(value) || 0;
+            } else {
+                items[index][field] = value;
+            }
+            renderTable();
+        }
+
+        function addRow() {
+            items.push({ desc: "New Item", qty: 1, rate: 0 });
+            renderTable();
+        }
+
+        function deleteRow(index) {
+            items.splice(index, 1);
+            renderTable();
+        }
+
+        function clearData() {
+            if(confirm("Kya aap saara data clear karna chahte hain?")) {
+                items = [];
+                renderTable();
+            }
+        }
+
+        // Excel file reader handling
+        document.getElementById('excelFile').addEventListener('change', function(e) {
+            let file = e.target.files[0];
+            if (!file) return;
+
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                let data = new Uint8Array(e.target.result);
+                let workbook = XLSX.read(data, {type: 'array'});
+                let firstSheet = workbook.SheetNames[0];
+                let worksheet = workbook.Sheets[firstSheet];
+                let json = XLSX.utils.sheet_to_json(worksheet, {header: 1});
+
+                let parsedItems = [];
+                // Assume columns: Description, Qty, Rate
+                for(let i = 0; i < json.length; i++) {
+                    let row = json[i];
+                    if(row.length >= 3 && row[0] && typeof row[1] !== 'undefined' && typeof row[2] !== 'undefined') {
+                        // Skip header rows if detected
+                        let q = parseFloat(row[1]);
+                        let r = parseFloat(row[2]);
+                        if(!isNaN(q) && !isNaN(r)) {
+                            parsedItems.push({
+                                desc: String(row[0]),
+                                qty: q,
+                                rate: r
+                            });
+                        }
+                    }
+                }
+
+                if(parsedItems.length > 0) {
+                    items = parsedItems;
+                    renderTable();
+                    alert("Excel file successfully upload aur parse ho gayi!");
+                } else {
+                    alert("Excel data read nahi ho saka. Barah-e-karam check karein ke columns Description, Qty, aur Rate format me hain.");
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        });
+
+        // Department Selector change handler
+        document.getElementById('deptSelect').addEventListener('change', function(e) {
+            document.getElementById('departmentOutput').innerText = e.target.value;
+        });
+
+        // Stamp Gap Slider handler
+        document.getElementById('stampGap').addEventListener('input', function(e) {
+            let val = e.target.value;
+            document.getElementById('gapVal').innerText = val;
+            document.getElementById('stampArea').style.height = val + 'px';
+        });
+
+        // Initial Render
+        renderTable();
+    </script>
+</body>
+</html>
