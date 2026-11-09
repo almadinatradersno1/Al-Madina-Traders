@@ -1,9 +1,15 @@
 function openAdminModal() {
-    document.getElementById('adminModal').classList.remove('hidden');
+    const modal = document.getElementById('adminModal');
+    if (modal) {
+        modal.classList.remove('hidden');
+    }
 }
 
 function closeAdminModal() {
-    document.getElementById('adminModal').classList.add('hidden');
+    const modal = document.getElementById('adminModal');
+    if (modal) {
+        modal.classList.add('hidden');
+    }
 }
 
 async function loginAdmin() {
