@@ -6,7 +6,7 @@
     <title>Post Office Billing Portal</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- SheetJS for Excel Upload -->
+    <!-- SheetJS for Excel Upload & Export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
@@ -53,7 +53,7 @@
         </div>
 
         <div class="border-t border-slate-100 pt-4 text-center">
-            <p class="text-xs text-slate-400">Enterprise Invoicing v4.0</p>
+            <p class="text-xs text-slate-400">Enterprise Invoicing v4.2</p>
         </div>
     </aside>
 
@@ -344,9 +344,14 @@
         <!-- TAB 5: BILLING HISTORY -->
         <div id="tab-history" class="tab-content hidden space-y-6">
             <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm space-y-4">
-                <div class="flex justify-between items-center border-b pb-3">
+                <div class="flex justify-between items-center border-b pb-3 flex-wrap gap-2">
                     <h3 class="font-bold text-slate-800 text-base">Generated Invoices History Database</h3>
-                    <button onclick="clearHistory()" class="text-rose-600 font-bold text-xs hover:underline">Clear History</button>
+                    <div class="flex items-center gap-3">
+                        <button onclick="exportHistoryToExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2 rounded-xl shadow transition flex items-center gap-1.5">
+                            📥 Export History to Excel
+                        </button>
+                        <button onclick="clearHistory()" class="text-rose-600 font-bold text-xs hover:underline">Clear History</button>
+                    </div>
                 </div>
 
                 <div class="overflow-x-auto">
