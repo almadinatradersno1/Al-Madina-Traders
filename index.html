@@ -17,11 +17,18 @@
 </head>
 <body class="text-slate-800 font-sans min-h-screen flex">
 
-    <!-- Floating Top-Right Admin Login Button -->
-    <div class="landing-top-bar no-print">
-        <button onclick="openAdminModal()" class="bg-orange-600 hover:bg-orange-700 text-white font-extrabold text-xs md:text-sm px-6 py-3 rounded-2xl shadow-2xl transition flex items-center gap-2 cursor-pointer border-2 border-white/80">
-            <span>🔐</span> Admin Login
-        </button>
+    <!-- Landing View: Full Letterhead Image with Scroll & Top Admin Login Button -->
+    <div id="landingBackgroundView" class="no-print">
+        <div class="landing-top-bar">
+            <button onclick="openAdminModal()" class="bg-orange-600 hover:bg-orange-700 text-white font-extrabold text-xs md:text-sm px-6 py-3 rounded-2xl shadow-2xl transition flex items-center gap-2 cursor-pointer border-2 border-white/80">
+                <span>🔐</span> Admin Login
+            </button>
+        </div>
+
+        <!-- Desktop Friendly Full Letterhead Image Container -->
+        <div class="w-full max-w-4xl mx-auto pt-4 px-4 shadow-2xl bg-white">
+            <img src="letterhead-bg.jpg" alt="Al-Madina Enterprises Letterhead" class="w-full h-auto block">
+        </div>
     </div>
 
     <!-- Left Sidebar Navigation (Locked until login) -->
