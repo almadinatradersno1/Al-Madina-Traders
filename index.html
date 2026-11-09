@@ -17,8 +17,35 @@
 </head>
 <body class="text-slate-800 font-sans min-h-screen flex">
 
-    <!-- Left Sidebar Navigation -->
-    <aside class="w-64 bg-white/95 backdrop-blur-md border-r border-amber-200/60 p-6 flex flex-col justify-between min-h-screen no-print shrink-0 shadow-sm">
+    <!-- Background Company Letterhead View (Shown before login) -->
+    <div id="landingBackgroundView" class="fixed inset-0 overflow-y-auto z-40 p-6 flex flex-col items-center justify-between">
+        <!-- Top Bar with Admin Login Button -->
+        <div class="w-full max-w-4xl flex justify-between items-center bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-lg border border-amber-200">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-orange-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">📦</div>
+                <h1 class="font-black text-slate-900 text-sm md:text-base">Al-Madina Enterprises Portal</h1>
+            </div>
+            <button onclick="openLandingLoginModal()" class="bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow transition flex items-center gap-2">
+                <span>🔐</span> Admin Login
+            </button>
+        </div>
+
+        <!-- Center Company Profile / Letterhead Preview Container -->
+        <div class="my-6 max-w-3xl w-full bg-white/95 backdrop-blur-md p-6 rounded-3xl shadow-2xl border border-amber-200 text-center space-y-4">
+            <h2 class="text-lg font-black text-slate-800 uppercase tracking-wider">Company Profile & Overview</h2>
+            <div class="border-2 border-dashed border-slate-300 rounded-2xl p-4 bg-slate-50">
+                <img src="letterhead-bg.jpg" alt="Company Letterhead" class="w-full h-auto rounded-xl shadow">
+            </div>
+            <p class="text-xs text-slate-500 font-medium">Please click the <b>Admin Login</b> button at the top right to access the billing suite.</p>
+        </div>
+
+        <div class="text-center text-xs text-slate-600 font-bold bg-white/80 px-4 py-2 rounded-xl">
+            Cloud Enterprise Billing & Invoicing Suite v5.0
+        </div>
+    </div>
+
+    <!-- Left Sidebar Navigation (Locked until login) -->
+    <aside id="portalSidebar" class="w-64 bg-white/95 backdrop-blur-md border-r border-amber-200/60 p-6 flex flex-col justify-between min-h-screen no-print shrink-0 shadow-sm portal-locked z-30">
         <div>
             <div class="flex items-center gap-3 mb-6">
                 <div class="w-10 h-10 bg-orange-600 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-md">📦</div>
@@ -28,15 +55,12 @@
                 </div>
             </div>
 
-            <!-- Login Status Badge & Admin Button -->
+            <!-- Logged In Admin Badge & Logout -->
             <div class="mb-4">
-                <button onclick="openAdminModal()" id="adminLoginBtn" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs transition bg-amber-600 text-white hover:bg-amber-700 shadow-md">
-                    <span>🔐</span> Admin Login
-                </button>
-                <div id="userInfoBadge" class="hidden p-2 bg-emerald-50 border border-emerald-200 rounded-xl text-center space-y-1">
+                <div id="userInfoBadge" class="p-2 bg-emerald-50 border border-emerald-200 rounded-xl text-center space-y-1">
                     <p class="text-[10px] text-emerald-600 font-bold uppercase">LoggedIn Admin</p>
                     <p id="userEmailText" class="text-xs font-bold text-slate-800 truncate"></p>
-                    <button onclick="logoutAdmin()" class="text-[10px] text-rose-600 font-bold hover:underline">Logout</button>
+                    <button onclick="logoutAdmin()" class="text-[10px] text-rose-600 font-bold hover:underline">Logout & Lock</button>
                 </div>
             </div>
 
@@ -73,8 +97,8 @@
         </div>
     </aside>
 
-    <!-- Main Content Area -->
-    <main class="flex-1 p-8 overflow-y-auto min-h-screen">
+    <!-- Main Content Area (Locked until login) -->
+    <main id="portalMain" class="flex-1 p-8 overflow-y-auto min-h-screen portal-locked z-30">
 
         <!-- Controls Header -->
         <div class="mb-6 flex flex-wrap justify-between items-center no-print gap-4">
@@ -453,7 +477,7 @@
 
     </main>
 
-    <!-- Admin Login Modal -->
+    <!-- Admin Login Popup Modal -->
     <div id="adminModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center z-50">
         <div class="bg-white p-6 rounded-2xl w-96 shadow-2xl space-y-4 relative border border-amber-100">
             <div class="flex justify-between items-center border-b pb-3">
@@ -473,7 +497,7 @@
                     <input type="password" id="adminPassword" placeholder="••••••••" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
                 </div>
                 <button onclick="loginAdmin()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs py-2.5 rounded-xl transition shadow">
-                    Login Securely
+                    Login to Dashboard
                 </button>
             </div>
         </div>
@@ -486,137 +510,3 @@
     <script src="app.js"></script>
 </body>
 </html>
-<!-- Full Screen Initial Login Overlay -->
-<div id="initialLoginScreen" class="fixed inset-0 bg-[#F6F4EE] z-50 flex items-center justify-center">
-    <div class="bg-white p-8 rounded-3xl w-full max-w-md shadow-2xl border border-amber-200 space-y-6 text-center">
-        <div class="w-16 h-16 bg-orange-600 rounded-2xl mx-auto flex items-center justify-center text-white font-black text-2xl shadow-lg">📦</div>
-        <div>
-            <h2 class="text-xl font-black text-slate-900">POST OFFICE BILLING PORTAL</h2>
-            <p class="text-xs text-slate-500 mt-1">Please login with your Admin credentials to access the system.</p>
-        </div>
-
-        <div class="space-y-4 text-left">
-            <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Admin Email</label>
-                <input type="email" id="loginEmail" placeholder="shafiulhaq@almadina.com" class="w-full border border-slate-200 rounded-xl p-3 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
-            </div>
-            <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Password</label>
-                <input type="password" id="loginPassword" placeholder="••••••••" class="w-full border border-slate-200 rounded-xl p-3 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
-            </div>
-            <button onclick="performInitialLogin()" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm py-3 rounded-xl transition shadow-md">
-                Login to Portal
-            </button>
-        </div>
-    </div>
-</div>
-<!-- Background Company Letterhead View (Shown before login) -->
-<div id="landingBackgroundView" class="fixed inset-0 overflow-y-auto z-40 p-6 flex flex-col items-center justify-between">
-    <!-- Top Bar with Admin Login Button -->
-    <div class="w-full max-w-4xl flex justify-between items-center bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-lg border border-amber-200">
-        <div class="flex items-center gap-3">
-            <div class="w-8 h-8 bg-orange-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">📦</div>
-            <h1 class="font-black text-slate-900 text-sm md:text-base">Al-Madina Enterprises Portal</h1>
-        </div>
-        <button onclick="openLandingLoginModal()" class="bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow transition flex items-center gap-2">
-            <span>🔐</span> Admin Login
-        </button>
-    </div>
-
-    <!-- Center Company Profile / Letterhead Preview Image container -->
-    <div class="my-6 max-w-3xl w-full bg-white p-6 rounded-3xl shadow-2xl border border-amber-200 text-center space-y-4">
-        <h2 class="text-lg font-black text-slate-800 uppercase tracking-wider">Company Profile & Overview</h2>
-        <div class="border-2 border-dashed border-slate-300 rounded-2xl p-4 bg-slate-50">
-            <img src="letterhead-bg.jpg" alt="Company Letterhead" class="w-full h-auto rounded-xl shadow">
-        </div>
-        <p class="text-xs text-slate-500 font-medium">Please click the <b>Admin Login</b> button at the top right to access the billing suite.</p>
-    </div>
-
-    <div class="text-center text-xs text-slate-600 font-bold bg-white/80 px-4 py-2 rounded-xl">
-        Cloud Enterprise Billing & Invoicing Suite v5.0
-    </div>
-</div>
-
-<!-- Left Sidebar Navigation (Locked until login) -->
-<aside id="portalSidebar" class="w-64 bg-white/95 backdrop-blur-md border-r border-amber-200/60 p-6 flex flex-col justify-between min-h-screen no-print shrink-0 shadow-sm portal-locked z-30">
-    <div>
-        <div class="flex items-center gap-3 mb-6">
-            <div class="w-10 h-10 bg-orange-600 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-md">📦</div>
-            <div>
-                <h1 class="font-bold text-slate-900 leading-tight">POST OFFICE</h1>
-                <p class="text-[10px] tracking-widest uppercase text-orange-600 font-extrabold">BILLING PORTAL</p>
-            </div>
-        </div>
-
-        <!-- Logged In Admin Badge & Logout -->
-        <div class="mb-4">
-            <div id="userInfoBadge" class="p-2 bg-emerald-50 border border-emerald-200 rounded-xl text-center space-y-1">
-                <p class="text-[10px] text-emerald-600 font-bold uppercase">LoggedIn Admin</p>
-                <p id="userEmailText" class="text-xs font-bold text-slate-800 truncate"></p>
-                <button onclick="logoutAdmin()" class="text-[10px] text-rose-600 font-bold hover:underline">Logout & Lock</button>
-            </div>
-        </div>
-
-        <nav class="space-y-1.5">
-            <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition text-slate-600 hover:bg-amber-50 hover:text-amber-900 active-tab">
-                <span>📊</span> Dashboard
-            </button>
-            <button onclick="switchTab('bill-memo')" id="nav-bill-memo" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition text-slate-600 hover:bg-amber-50 hover:text-amber-900">
-                <span>🧾</span> Bill / Cash Memo
-            </button>
-            <button onclick="switchTab('delivery-challan')" id="nav-delivery-challan" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition text-slate-600 hover:bg-amber-50 hover:text-amber-900">
-                <span>🚚</span> Delivery Challan
-            </button>
-            <button onclick="switchTab('sales-tax')" id="nav-sales-tax" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition text-slate-600 hover:bg-amber-50 hover:text-amber-900">
-                <span>📄</span> Sales Tax Invoice
-            </button>
-            <button onclick="switchTab('history')" id="nav-history" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition text-slate-600 hover:bg-amber-50 hover:text-amber-900">
-                <span>📜</span> Billing History
-            </button>
-            <button onclick="switchTab('serial-manager')" id="nav-serial-manager" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition text-slate-600 hover:bg-amber-50 hover:text-amber-900">
-                <span>🔢</span> Invoices & Serials
-            </button>
-            <button onclick="switchTab('departments')" id="nav-departments" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition text-slate-600 hover:bg-amber-50 hover:text-amber-900">
-                <span>🏢</span> Departments
-            </button>
-            <button onclick="switchTab('companies')" id="nav-companies" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition text-slate-600 hover:bg-amber-50 hover:text-amber-900">
-                <span>⚙️</span> Company Settings
-            </button>
-        </nav>
-    </div>
-
-    <div class="border-t border-slate-100 pt-4 text-center">
-        <p class="text-xs text-slate-400">Cloud Enterprise v5.0</p>
-    </div>
-</aside>
-
-<!-- Main Content Area (Locked until login) -->
-<main id="portalMain" class="flex-1 p-8 overflow-y-auto min-h-screen portal-locked">
-    <!-- Saara purana tab contents ka code yahan rahega (Dashboard, Bill Memo, etc.) -->
-</main>
-
-<!-- Admin Login Popup Modal (Opens when Top Admin Login button is clicked) -->
-<div id="adminModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center z-50">
-    <div class="bg-white p-6 rounded-2xl w-96 shadow-2xl space-y-4 relative border border-amber-100">
-        <div class="flex justify-between items-center border-b pb-3">
-            <div class="flex items-center gap-2">
-                <span class="text-amber-600 font-black">🔐</span>
-                <h3 class="font-bold text-slate-900 text-base">Admin Portal Login</h3>
-            </div>
-            <button onclick="closeAdminModal()" class="text-slate-400 hover:text-slate-600 font-bold text-sm">✕</button>
-        </div>
-        <div class="space-y-3">
-            <div>
-                <label class="block text-xs font-bold text-slate-600 mb-1">Admin Email</label>
-                <input type="email" id="adminEmail" placeholder="shafiulhaq@almadina.com" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
-            </div>
-            <div>
-                <label class="block text-xs font-bold text-slate-600 mb-1">Password</label>
-                <input type="password" id="adminPassword" placeholder="••••••••" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
-            </div>
-            <button onclick="loginAdmin()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs py-2.5 rounded-xl transition shadow">
-                Login to Dashboard
-            </button>
-        </div>
-    </div>
-</div>
