@@ -42,3 +42,10 @@
         padding-bottom: 2px !important;
     }
 }
+body {
+    background-image: linear-gradient(rgba(246, 244, 238, 0.9), rgba(246, 244, 238, 0.9)), url('letterhead-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
