@@ -69,10 +69,10 @@ body {
     min-height: 100vh;
     background-color: #f8fafc;
     background-image: url('letterhead-bg.jpg');
-    background-size: cover;
+    background-size: 100% auto; /* Image poori dikhegi aur cut nahi hogi */
     background-position: top center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+    background-repeat: repeat-y; /* Taake niche scroll karne par letterhead repeat ya pura view ho sake */
+    background-attachment: scroll;
 }
 
 /* Single Landing Top Bar */
