@@ -15,9 +15,9 @@ let defaultDepartments = [
     { code: "MOT", name: "Office of the Additional IGP,\nMotorway Police,Karachi." }
 ];
 
-let companies = JSON.parse(localStorage.getItem('portal_companies')) || defaultCompanies;
-let departments = JSON.parse(localStorage.getItem('portal_departments')) || defaultDepartments;
-let invoiceHistory = JSON.parse(localStorage.getItem('portal_history')) || [];
+let companies = JSON.parse(JSON.stringify(defaultCompanies));
+let departments = JSON.parse(JSON.stringify(defaultDepartments));
+let invoiceHistory = [];
 
 let selectedCompany = companies[0];
 let currentQuarter = "1st Qtr";
@@ -25,7 +25,9 @@ let items = [
     { desc: "LPG Gas Filled for the Month of September-2026", qty: 17, rate: 520 }
 ];
 
-function init() {
+async function init() {
+    await loadFromCloud();
+
     populateCompanyDropdowns();
     populateDepartmentDropdown();
     renderDepartmentManager();
@@ -87,10 +89,34 @@ function init() {
     document.getElementById('serialExcelFile').addEventListener('change', handleSerialExcelUpload);
 }
 
-function saveStorage() {
-    localStorage.setItem('portal_companies', JSON.stringify(companies));
-    localStorage.setItem('portal_departments', JSON.stringify(departments));
-    localStorage.setItem('portal_history', JSON.stringify(invoiceHistory));
+// Cloud Database Sync Functions
+async function saveToCloud() {
+    try {
+        await db.collection("portalData").doc("mainStore").set({
+            companies: companies,
+            departments: departments,
+            invoiceHistory: invoiceHistory
+        });
+    } catch (err) {
+        console.error("Cloud save error:", err);
+    }
+}
+
+async function loadFromCloud() {
+    try {
+        let doc = await db.collection("portalData").doc("mainStore").get();
+        if (doc.exists) {
+            let data = doc.data();
+            if (data.companies) companies = data.companies;
+            if (data.departments) departments = data.departments;
+            if (data.invoiceHistory) invoiceHistory = data.invoiceHistory;
+            selectedCompany = companies[0];
+        } else {
+            await saveToCloud();
+        }
+    } catch (err) {
+        console.error("Cloud load error:", err);
+    }
 }
 
 function switchTab(tabId) {
@@ -145,75 +171,18 @@ function populateDepartmentDropdown() {
     });
 }
 
-function addDepartment() {
+async function addDepartment() {
     let code = document.getElementById('newDeptCode').value.trim().toUpperCase();
     let name = document.getElementById('newDeptName').value.trim();
     if(code && name) {
         departments.push({ code, name });
-        saveStorage();
+        await saveToCloud();
         populateDepartmentDropdown();
         renderDepartmentManager();
         document.getElementById('newDeptCode').value = '';
         document.getElementById('newDeptName').value = '';
-        alert("Department successfully saved permanently!");
+        alert("Department successfully saved to Cloud Database!");
     }
-}
-
-function handleDeptExcelUpload(e) {
-    let file = e.target.files[0];
-    if (!file) return;
-    let reader = new FileReader();
-    reader.onload = function(e) {
-        let workbook = XLSX.read(new Uint8Array(e.target.result), {type: 'array'});
-        let json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {header: 1});
-        let count = 0;
-        for(let i = 0; i < json.length; i++) {
-            let row = json[i];
-            if(row.length >= 2 && row[0] && row[1]) {
-                let code = String(row[0]).trim().toUpperCase();
-                let name = String(row[1]).trim();
-                if(!departments.some(d => d.code === code)) {
-                    departments.push({ code, name });
-                    count++;
-                }
-            }
-        }
-        saveStorage();
-        populateDepartmentDropdown();
-        renderDepartmentManager();
-        alert(`${count} new departments permanently imported!`);
-    };
-    reader.readAsArrayBuffer(file);
-}
-
-function handleSerialExcelUpload(e) {
-    let file = e.target.files[0];
-    if (!file) return;
-    let compIdx = document.getElementById('serialManagerCompSelect').value;
-    let comp = companies[compIdx];
-
-    let reader = new FileReader();
-    reader.onload = function(e) {
-        let workbook = XLSX.read(new Uint8Array(e.target.result), {type: 'array'});
-        let json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {header: 1});
-        
-        let newBills = [];
-        let newSt = [];
-        for(let i = 0; i < json.length; i++) {
-            let row = json[i];
-            if(row[0] && !isNaN(row[0])) newBills.push(parseInt(row[0]));
-            if(row[1] && !isNaN(row[1])) newSt.push(parseInt(row[1]));
-        }
-
-        if(newBills.length > 0) comp.billsPool = newBills;
-        if(newSt.length > 0) comp.stPool = newSt;
-        saveStorage();
-        populateCompanyDropdowns();
-        renderSerialManager();
-        renderAll();
-        alert(`Bill and Serial numbers pool updated for ${comp.name}!`);
-    };
-    reader.readAsArrayBuffer(file);
 }
 
 function renderSerialManager() {
@@ -243,13 +212,20 @@ function renderDepartmentManager() {
                     <span class="font-bold text-xs bg-amber-200 text-amber-900 px-2 py-1 rounded mr-2">${d.code}</span>
                     <span class="text-xs font-medium text-slate-800">${d.name.replace('\n', ' ')}</span>
                 </div>
-                <button onclick="departments.splice(${idx},1); saveStorage(); populateDepartmentDropdown(); renderDepartmentManager();" class="text-rose-600 font-bold text-xs hover:underline">Remove</button>
+                <button onclick="removeDepartment(${idx})" class="text-rose-600 font-bold text-xs hover:underline">Remove</button>
             </div>
         `;
     });
 }
 
-function triggerPrintAndSave() {
+async function removeDepartment(idx) {
+    departments.splice(idx, 1);
+    await saveToCloud();
+    populateDepartmentDropdown();
+    renderDepartmentManager();
+}
+
+async function triggerPrintAndSave() {
     const dept = document.getElementById('deptInput').value;
     let nextBill = selectedCompany.billsPool.find(b => !selectedCompany.usedBills.includes(b)) || selectedCompany.billsPool[0] || 1000;
     let nextSt = selectedCompany.stPool.find(s => !selectedCompany.usedSt.includes(s)) || selectedCompany.stPool[0] || 100;
@@ -272,7 +248,7 @@ function triggerPrintAndSave() {
         amount: Math.round(grandTotal)
     });
 
-    saveStorage();
+    await saveToCloud();
     populateCompanyDropdowns();
     renderSerialManager();
     renderHistory();
@@ -285,7 +261,7 @@ function renderHistory() {
     const tbody = document.getElementById('historyTableBody');
     tbody.innerHTML = '';
     if(invoiceHistory.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-slate-400">No invoice records saved yet.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-slate-400">No invoice records saved on cloud yet.</td></tr>`;
         return;
     }
     invoiceHistory.forEach(h => {
@@ -303,10 +279,10 @@ function renderHistory() {
     });
 }
 
-function clearHistory() {
-    if(confirm("Kya aap saari billing history clear karna chahte hain?")) {
+async function clearHistory() {
+    if(confirm("Kya aap cloud se saari billing history clear karna chahte hain?")) {
         invoiceHistory = [];
-        saveStorage();
+        await saveToCloud();
         renderHistory();
     }
 }
@@ -314,7 +290,6 @@ function clearHistory() {
 function renderAll() {
     const dept = document.getElementById('deptInput').value;
     
-    // Subject handling
     let subVal = document.getElementById('subjectSelect').value;
     let finalSubject = subVal === 'CUSTOM' ? (document.getElementById('customSubjectInput').value || 'CUSTOM') : subVal;
     document.getElementById('memoSubjectDisplay').innerText = finalSubject;
@@ -424,31 +399,6 @@ function renderAll() {
     });
 }
 
-function handleExcelUpload(e) {
-    let file = e.target.files[0];
-    if (!file) return;
-    let reader = new FileReader();
-    reader.onload = function(e) {
-        let workbook = XLSX.read(new Uint8Array(e.target.result), {type: 'array'});
-        let json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {header: 1});
-        let parsed = [];
-        for(let i = 0; i < json.length; i++) {
-            let row = json[i];
-            if(row.length >= 3 && row[0] && !isNaN(parseFloat(row[1])) && !isNaN(parseFloat(row[2]))) {
-                parsed.push({ desc: String(row[0]), qty: parseFloat(row[1]), rate: parseFloat(row[2]) });
-            }
-        }
-        if(parsed.length > 0) {
-            items = parsed;
-            renderAll();
-            alert("Excel invoice items loaded successfully!");
-        } else {
-            alert("Formatting error. Make sure columns are Description, Quantity, Rate.");
-        }
-    };
-    reader.readAsArrayBuffer(file);
-}
-
 function renderCompanyManager() {
     const container = document.getElementById('companyList');
     container.innerHTML = '';
@@ -462,27 +412,39 @@ function renderCompanyManager() {
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
                     <div>
                         <label class="block font-bold text-slate-600 mb-1">Vendor Type</label>
-                        <select onchange="companies[${idx}].vendorType = this.value; saveStorage(); renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 font-bold bg-white">
+                        <select onchange="updateCompVendor(${idx}, this.value)" class="w-full border border-slate-300 rounded-lg p-1.5 font-bold bg-white">
                             <option value="AGPR" ${c.vendorType === 'AGPR' ? 'selected' : ''}>AGPR Number</option>
                             <option value="AG Sindh" ${c.vendorType === 'AG Sindh' ? 'selected' : ''}>AG Sindh Number</option>
                         </select>
                     </div>
                     <div>
                         <label class="block font-bold text-slate-600 mb-1">Vendor / AG #</label>
-                        <input type="text" value="${c.vendorNo}" oninput="companies[${idx}].vendorNo = this.value; saveStorage(); renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
+                        <input type="text" value="${c.vendorNo}" oninput="updateCompField(${idx}, 'vendorNo', this.value)" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-600 mb-1">NTN #</label>
-                        <input type="text" value="${c.ntn}" oninput="companies[${idx}].ntn = this.value; saveStorage(); renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
+                        <input type="text" value="${c.ntn}" oninput="updateCompField(${idx}, 'ntn', this.value)" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-600 mb-1">STN / Sale Tax #</label>
-                        <input type="text" value="${c.stn}" oninput="companies[${idx}].stn = this.value; saveStorage(); renderAll();" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
+                        <input type="text" value="${c.stn}" oninput="updateCompField(${idx}, 'stn', this.value)" class="w-full border border-slate-300 rounded-lg p-1.5 bg-white">
                     </div>
                 </div>
             </div>
         `;
     });
+}
+
+async function updateCompVendor(idx, val) {
+    companies[idx].vendorType = val;
+    await saveToCloud();
+    renderAll();
+}
+
+async function updateCompField(idx, field, val) {
+    companies[idx][field] = val;
+    await saveToCloud();
+    renderAll();
 }
 
 window.onload = init;
