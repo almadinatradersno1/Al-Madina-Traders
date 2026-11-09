@@ -43,7 +43,7 @@
     }
 }
 body {
-    background-image: linear-gradient(rgba(246, 244, 238, 0.9), rgba(246, 244, 238, 0.9)), url('letterhead-bg.jpg');
+    background-image: linear-gradient(rgba(246, 244, 238, 0.92), rgba(246, 244, 238, 0.92)), url('letterhead-bg.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
