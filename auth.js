@@ -96,3 +96,59 @@ auth.onAuthStateChanged((user) => {
         if(badge) badge.classList.add('hidden');
     }
 });
+function openLandingLoginModal() {
+    document.getElementById('adminModal').classList.remove('hidden');
+}
+
+function closeAdminModal() {
+    document.getElementById('adminModal'].classList.add('hidden'); // note spelling check
+}
+
+async function loginAdmin() {
+    let email = document.getElementById('adminEmail').value.trim();
+    let pass = document.getElementById('adminPassword').value.trim();
+
+    if (!email || !pass) {
+        alert("Meharbani karke Email aur Password enter karein.");
+        return;
+    }
+
+    try {
+        await auth.signInWithEmailAndPassword(email, pass);
+        closeAdminModal();
+        alert("Admin Login Successful!");
+    } catch (error) {
+        alert("Login Failed: " + error.message);
+    }
+}
+
+async function logoutAdmin() {
+    try {
+        await auth.signOut();
+        alert("Logged out successfully.");
+    } catch (error) {
+        console.error("Logout Error:", error);
+    }
+}
+
+// Real-time Auth State Listener (Controls Background View vs Dashboard)
+auth.onAuthStateChanged((user) => {
+    const landingView = document.getElementById('landingBackgroundView');
+    const sidebar = document.getElementById('portalSidebar');
+    const mainContent = document.getElementById('portalMain');
+    const emailTxt = document.getElementById('userEmailText');
+
+    if (user) {
+        // User logged in: Hide landing background view, show sidebar and dashboard
+        if(landingView) landingView.classList.add('hidden');
+        if(sidebar) sidebar.classList.remove('portal-locked');
+        if(mainContent) mainContent.classList.remove('portal-locked');
+        if(emailTxt) emailTxt.innerText = user.email;
+    } else {
+        // User logged out: Show landing background view with company letterhead, lock dashboard
+        if(landingView) landingView.classList.remove('hidden');
+        if(sidebar) sidebar.classList.add('portal-locked');
+        if(mainContent) mainContent.classList.add('portal-locked');
+        if(emailTxt) emailTxt.innerText = '';
+    }
+});
