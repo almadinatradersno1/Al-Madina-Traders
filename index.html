@@ -6,9 +6,13 @@
     <title>Post Office Billing Portal</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- SheetJS for Excel Upload & Export -->
+    <!-- SheetJS for Excel Import & Export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <!-- Custom CSS -->
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-[#F6F4EE] text-slate-800 font-sans min-h-screen flex">
@@ -53,7 +57,7 @@
         </div>
 
         <div class="border-t border-slate-100 pt-4 text-center">
-            <p class="text-xs text-slate-400">Enterprise Invoicing v4.2</p>
+            <p class="text-xs text-slate-400">Modular Cloud Architecture v5.0</p>
         </div>
     </aside>
 
@@ -64,7 +68,7 @@
         <div class="mb-6 flex flex-wrap justify-between items-center no-print gap-4">
             <div>
                 <h2 id="pageTitle" class="text-2xl font-bold text-slate-900">Portal Overview</h2>
-                <p class="text-xs text-slate-500">Manage billing sequence, companies & departments automatically</p>
+                <p class="text-xs text-slate-500">Cloud-backed live database storage</p>
             </div>
             
             <div id="headerPrintAction" class="hidden items-center gap-3">
@@ -105,14 +109,12 @@
 
         <!-- TAB 2: BILL / CASH MEMO -->
         <div id="tab-bill-memo" class="tab-content hidden space-y-6">
-            <!-- INVOICE & DEPARTMENT CONTROLS -->
             <div class="max-w-4xl mx-auto bg-white p-6 rounded-2xl border border-amber-200 shadow-sm space-y-4 no-print">
                 <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider border-b pb-2 flex justify-between items-center">
                     <span>INVOICE & DEPARTMENT CONTROLS</span>
                     <span id="activeQuarterBadge" class="bg-amber-100 text-amber-900 font-extrabold px-2.5 py-1 rounded-md text-[10px]">1st Qtr Active</span>
                 </h4>
 
-                <!-- Bulk Excel Data Import Section -->
                 <div class="bg-amber-50/60 p-4 rounded-xl border border-amber-200 flex flex-wrap justify-between items-center gap-4">
                     <div class="flex items-center gap-3">
                         <span class="p-2 bg-emerald-100 text-emerald-700 rounded-lg text-base">📁</span>
@@ -424,7 +426,7 @@
             </div>
 
             <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm">
-                <h4 class="font-bold text-slate-800 mb-4 text-sm">Saved Departments List (Permanently Stored)</h4>
+                <h4 class="font-bold text-slate-800 mb-4 text-sm">Saved Departments List (Cloud Stored)</h4>
                 <div id="departmentList" class="space-y-2"></div>
             </div>
         </div>
@@ -439,7 +441,10 @@
 
     </main>
 
-    <!-- Custom App JS -->
+    <!-- Modular JS Files -->
+    <script src="firebase-config.js"></script>
+    <script src="auth.js"></script>
+    <script src="excel-handler.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
