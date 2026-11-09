@@ -49,3 +49,6 @@ body {
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
+.portal-locked {
+    display: none !important;
+}
