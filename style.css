@@ -145,7 +145,3 @@ table th, table td {
 body:not(.portal-locked) {
     background: #f8fafc !important;
 }
-
-#landingBackgroundView {
-    display: none !important;
-}
