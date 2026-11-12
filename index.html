@@ -105,8 +105,7 @@
                 </button>
             </div>
         </div>
-
-        <!-- TAB 1: DASHBOARD -->
+<!-- TAB 1: DASHBOARD -->
         <div id="tab-dashboard" class="tab-content space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl border border-amber-100 shadow-sm flex items-center justify-between">
@@ -134,8 +133,7 @@
                 </div>
             </div>
         </div>
-
-        <!-- TAB 2: BILL / CASH MEMO -->
+                <!-- TAB 2: BILL / CASH MEMO -->
         <div id="tab-bill-memo" class="tab-content hidden space-y-6">
             <div class="max-w-4xl mx-auto bg-white/95 backdrop-blur-sm p-6 rounded-2xl border border-amber-200 shadow-sm space-y-4 no-print">
                 <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider border-b pb-2 flex justify-between items-center">
@@ -469,13 +467,27 @@
                     <input type="text" id="newDeptCode" placeholder="Code (e.g. KA3371)" class="border border-slate-200 rounded-xl p-2.5 text-sm font-bold uppercase">
                     <input type="text" id="newDeptName" placeholder="Full Department Address / Name" class="md:col-span-2 border border-slate-200 rounded-xl p-2.5 text-sm">
                 </div>
-                <div class="flex gap-4 items-center">
-                    <button onclick="addDepartment()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs px-4 py-2.5 rounded-xl">Save Department</button>
-                    <label class="bg-amber-100 hover:bg-amber-200 text-amber-900 font-semibold text-xs px-4 py-2.5 rounded-xl cursor-pointer transition">
-                        📁 Upload Departments Excel
-                        <input type="file" id="deptExcelFile" accept=".xlsx, .xls, .csv" class="hidden">
-                    </label>
+                <div class="flex flex-wrap gap-4 items-center justify-between">
+                    <div class="flex gap-4 items-center">
+                        <button onclick="addDepartment()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs px-4 py-2.5 rounded-xl cursor-pointer">Save Department</button>
+                        <label class="bg-amber-100 hover:bg-amber-200 text-amber-900 font-semibold text-xs px-4 py-2.5 rounded-xl cursor-pointer transition">
+                            📁 Upload Departments Excel
+                            <input type="file" id="deptExcelFile" accept=".xlsx, .xls, .csv" class="hidden">
+                        </label>
+                    </div>
+                    <div>
+                        <button onclick="manualSaveDepartments()" class="bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow transition flex items-center gap-1.5 cursor-pointer">
+                            ☁️ Save All to Cloud Database
+                        </button>
+                    </div>
                 </div>
+            </div>
+
+            <div class="bg-white/95 backdrop-blur-sm p-6 rounded-2xl border border-amber-100 shadow-sm">
+                <h4 class="font-bold text-slate-800 mb-4 text-sm">Saved Departments List (Cloud Stored)</h4>
+                <div id="departmentList" class="space-y-2"></div>
+            </div>
+        </div>
                 <!-- New Manual Cloud Save Button -->
                     <div>
                         <button onclick="manualSaveDepartments()" class="bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow transition flex items-center gap-1.5 cursor-pointer">
