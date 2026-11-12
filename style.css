@@ -141,11 +141,3 @@ table th, table td {
         width: 100% !important;
     }
 }
-/* Jab user login ho jaye (portal unlocked ho), toh background letterhead bilkul gayab ho jaye */
-body:not(.portal-locked) {
-    background: #f8fafc !important;
-}
-
-#landingBackgroundView {
-    display: none !important;
-}
