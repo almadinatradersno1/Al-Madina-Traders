@@ -53,24 +53,31 @@ document.addEventListener('DOMContentLoaded', () => {
         const emailTxt = document.getElementById('userEmailText');
 
         if (user) {
-            // User logged in: Remove landing background completely from DOM
+            // 1. Letterhead background ko mukammal hide/remove kar dein
             if (landingView) {
-                landingView.remove();
+                landingView.style.display = 'none';
             }
-            if (sidebar) sidebar.classList.remove('portal-locked');
-            if (mainContent) mainContent.classList.remove('portal-locked');
+
+            // 2. Sidebar aur Main Dashboard ko unlock karke visible karein
+            if (sidebar) {
+                sidebar.classList.remove('portal-locked');
+                sidebar.style.display = 'flex'; // Ensure block/flex display
+            }
+            if (mainContent) {
+                mainContent.classList.remove('portal-locked');
+                mainContent.style.display = 'block'; // Ensure it's visible
+            }
+
+            // 3. User email show karein
             if (emailTxt) emailTxt.innerText = user.email;
         } else {
-            // User logged out
+            // User logged out: Lock dashboard, show letterhead
+            if (landingView) {
+                landingView.style.display = 'block';
+            }
             if (sidebar) sidebar.classList.add('portal-locked');
             if (mainContent) mainContent.classList.add('portal-locked');
             if (emailTxt) emailTxt.innerText = '';
         }
     });
 });
-if (user) {
-    // Login hone par letterhead background ko completely hide kar dega
-    if (landingView) {
-        landingView.style.display = 'none';
-    }
-}
