@@ -68,6 +68,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // 3. User email show karein
             if (emailTxt) emailTxt.innerText = user.email;
+            // 4. Dashboard ko foran active/refresh kar dein taake stats cards nazar aa jayein
+            if (typeof switchTab === 'function') {
+                switchTab('dashboard');
+            }
         } else {
             // User logged out: Lock dashboard, show letterhead
             if (landingView) {
