@@ -145,3 +145,9 @@ table th, table td {
 body:not(.portal-locked) {
     background: #f8fafc !important;
 }
+@media print {
+    /* Yeh sirf browser ke automatic URL aur date/title ko print hone se rokega */
+    @page {
+        margin: 0; 
+    }
+}
