@@ -406,15 +406,18 @@
         <!-- TAB 6: INVOICES & SERIALS MANAGER -->
         <div id="tab-serial-manager" class="tab-content hidden space-y-6">
             <div class="bg-white/95 backdrop-blur-sm p-6 rounded-2xl border border-amber-100 shadow-sm space-y-4">
-                <h3 class="font-bold text-slate-800">Upload & Manage Company Invoice & ST Serials</h3>
+                <h3 class="font-bold text-slate-800 text-base">Company-wise Invoice & ST Serials Pool Manager</h3>
+                <p class="text-xs text-slate-500">Apni marzi ki company select karein aur uska Bill Numbers aur ST Serials ka pool manually manage ya update karein.</p>
+                
                 <div class="flex flex-wrap gap-4 items-center">
                     <div>
-                        <label class="block text-xs font-bold text-slate-600 mb-1">Select Company</label>
-                        <select id="serialManagerCompSelect" class="border border-slate-200 rounded-xl p-2.5 text-sm font-bold bg-white"></select>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Select Company to Manage</label>
+                        <select id="serialManagerCompSelect" class="border border-slate-200 rounded-xl p-2.5 text-sm font-bold bg-white focus:ring-2 focus:ring-amber-500"></select>
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-600 mb-1">Upload Excel (Columns: BillNo, STSerial)</label>
-                        <input type="file" id="serialExcelFile" accept=".xlsx, .xls, .csv" class="text-xs text-slate-500 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-amber-100 file:text-amber-900 cursor-pointer">
+                    <div class="pt-5">
+                        <button onclick="openPoolModal()" class="bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs px-5 py-3 rounded-xl shadow transition flex items-center gap-2">
+                            <span>✏️</span> Edit / Paste Serials Pool for Selected Company
+                        </button>
                     </div>
                 </div>
             </div>
@@ -435,7 +438,29 @@
                 </div>
             </div>
         </div>
-
+<!-- Manual Pool Edit Modal Popup -->
+    <div id="poolModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-2xl w-[500px] shadow-2xl space-y-4 relative border border-amber-100">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 id="modalCompTitle" class="font-bold text-slate-900 text-base">Manage Serial Pool</h3>
+                <button onclick="closePoolModal()" class="text-slate-400 hover:text-slate-600 font-bold text-sm">✕</button>
+            </div>
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Bill Numbers Pool (Comma ya space se separate karke likhein, e.g. 12489, 12490, 12491)</label>
+                    <textarea id="modalBillsInput" rows="4" class="w-full border border-slate-300 rounded-xl p-2.5 font-mono focus:ring-2 focus:ring-amber-500"></textarea>
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">ST Serials Pool (Comma ya space se separate karke likhein, e.g. 6819, 6820, 6821)</label>
+                    <textarea id="modalStInput" rows="4" class="w-full border border-slate-300 rounded-xl p-2.5 font-mono focus:ring-2 focus:ring-amber-500"></textarea>
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 pt-2 border-t">
+                <button onclick="closePoolModal()" class="px-4 py-2 bg-slate-200 text-slate-700 font-bold rounded-xl text-xs">Cancel</button>
+                <button onclick="saveManualPool()" class="px-5 py-2 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl text-xs">Save Pool to Cloud</button>
+            </div>
+        </div>
+    </div>
         <!-- TAB 7: DEPARTMENT MANAGER -->
         <div id="tab-departments" class="tab-content hidden space-y-6">
             <div class="bg-white/95 backdrop-blur-sm p-6 rounded-2xl border border-amber-100 shadow-sm space-y-4">
