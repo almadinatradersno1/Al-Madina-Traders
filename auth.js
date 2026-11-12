@@ -68,3 +68,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+if (user) {
+    // Login hone par letterhead background ko completely hide kar dega
+    if (landingView) {
+        landingView.style.display = 'none';
+    }
+}
