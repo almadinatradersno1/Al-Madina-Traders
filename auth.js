@@ -44,6 +44,7 @@ async function logoutAdmin() {
 }
 
 // Real-time Auth State Listener (Controls Background Letterhead View vs Dashboard)
+// Real-time Auth State Listener (Controls Background Letterhead View vs Dashboard)
 auth.onAuthStateChanged((user) => {
     const landingView = document.getElementById('landingBackgroundView');
     const sidebar = document.getElementById('portalSidebar');
@@ -51,14 +52,20 @@ auth.onAuthStateChanged((user) => {
     const emailTxt = document.getElementById('userEmailText');
 
     if (user) {
-        // User logged in: Hide landing background view completely
-        if (landingView) landingView.style.display = 'none'; // <-- Isay style.display = 'none' kar dein
+        // User logged in: Hide landing background completely, unlock dashboard
+        if (landingView) {
+            landingView.style.display = 'none'; // Background ko screen se gayab kar dega
+            landingView.classList.add('hidden');
+        }
         if (sidebar) sidebar.classList.remove('portal-locked');
         if (mainContent) mainContent.classList.remove('portal-locked');
         if (emailTxt) emailTxt.innerText = user.email;
     } else {
-        // User logged out: Show landing background view
-        if (landingView) landingView.style.display = 'block';
+        // User logged out: Show landing background view, lock dashboard
+        if (landingView) {
+            landingView.style.display = 'block'; // Logout hone par wapas le aayega
+            landingView.classList.remove('hidden');
+        }
         if (sidebar) sidebar.classList.add('portal-locked');
         if (mainContent) mainContent.classList.add('portal-locked');
         if (emailTxt) emailTxt.innerText = '';
