@@ -448,3 +448,27 @@ async function updateCompField(idx, field, val) {
 }
 
 window.onload = init;
+// 1. Dropdown change hone par table ko dobara render karein
+document.getElementById('serialManagerCompSelect').addEventListener('change', () => {
+    renderSerialStatusTable(); // Yeh function aapke serials render karta hai
+});
+
+// 2. Render function ke andar select ki hui company ka filter lagayein
+function renderSerialStatusTable() {
+    const selectedCompany = document.getElementById('serialManagerCompSelect').value;
+    const tbody = document.getElementById('serialStatusTableBody');
+    tbody.innerHTML = ''; // Table clear karein
+
+    // 'allSerialsData' aapke paas jo bhi array ya object ho jisme data save hai
+    for (let compName in allSerialsData) {
+        // Agar koi specific company select hai aur yeh woh nahi hai, toh skip kar dein
+        if (selectedCompany && selectedCompany !== "All" && compName !== selectedCompany) {
+            continue;
+        }
+
+        // Baki wahi aapka purana design (pills, frozen, bold available numbers) yahan render hoga:
+        let row = document.createElement('tr');
+        // ... aapka purana HTML row generator code ...
+        tbody.appendChild(row);
+    }
+}
