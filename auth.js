@@ -42,22 +42,27 @@ async function logoutAdmin() {
         console.error("Logout Error:", error);
     }
 }
-auth.onAuthStateChanged((user) => {
-    if (user) {
-        // User logged in: Sabhi login backgrounds ko DOM se permanently delete kar dein
+// Real-time Auth State Listener (Controls Background Letterhead View vs Dashboard)
+document.addEventListener('DOMContentLoaded', () => {
+    auth.onAuthStateChanged((user) => {
         const landingView = document.getElementById('landingBackgroundView');
-        if (landingView) landingView.remove();
-
-        // Agar koi aur background element ya letterhead div hai, uski ID yahan daal kar remove kardein:
-        const letterheadDiv = document.querySelector('.letterhead-bg'); // ya jo bhi class/ID ho
-        if (letterheadDiv) letterheadDiv.remove();
-
         const sidebar = document.getElementById('portalSidebar');
         const mainContent = document.getElementById('portalMain');
         const emailTxt = document.getElementById('userEmailText');
 
-        if (sidebar) sidebar.classList.remove('portal-locked');
-        if (mainContent) mainContent.classList.remove('portal-locked');
-        if (emailTxt) emailTxt.innerText = user.email;
-    }
+        if (user) {
+            // User logged in: Remove landing background completely from DOM
+            if (landingView) {
+                landingView.remove();
+            }
+            if (sidebar) sidebar.classList.remove('portal-locked');
+            if (mainContent) mainContent.classList.remove('portal-locked');
+            if (emailTxt) emailTxt.innerText = user.email;
+        } else {
+            // User logged out
+            if (sidebar) sidebar.classList.add('portal-locked');
+            if (mainContent) mainContent.classList.add('portal-locked');
+            if (emailTxt) emailTxt.innerText = '';
+        }
+    });
 });
