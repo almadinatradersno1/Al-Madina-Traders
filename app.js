@@ -462,3 +462,48 @@ async function updateCompField(idx, field, val) {
 }
 
 window.onload = init;
+// Open Manual Pool Modal
+function openPoolModal() {
+    const selIdx = document.getElementById('serialManagerCompSelect').value;
+    if(selIdx === "") {
+        alert("Pehle koi company select karein!");
+        return;
+    }
+    const comp = companies[selIdx];
+    document.getElementById('modalCompTitle').innerText = `Manage Pool for: ${comp.name}`;
+    document.getElementById('modalBillsInput').value = comp.billsPool.join(', ');
+    document.getElementById('modalStInput').value = comp.stPool.join(', ');
+    
+    document.getElementById('poolModal').classList.remove('hidden');
+}
+
+// Close Manual Pool Modal
+function closePoolModal() {
+    document.getElementById('poolModal').classList.add('hidden');
+}
+
+// Save Manual Pool Data
+async function saveManualPool() {
+    const selIdx = document.getElementById('serialManagerCompSelect').value;
+    if(selIdx === "") return;
+
+    let billsText = document.getElementById('modalBillsInput').value;
+    let stText = document.getElementById('modalStInput').value;
+
+    // Text ko numbers array mein convert karna (comma, space ya newline se split karke)
+    let billsArray = billsText.split(/[\s,]+/).map(n => parseInt(n.trim())).filter(n => !isNaN(n));
+    let stArray = stText.split(/[\s,]+/).map(n => parseInt(n.trim())).filter(n => !isNaN(n));
+
+    companies[selIdx].billsPool = billsArray;
+    companies[selIdx].stPool = stArray;
+
+    // Jo numbers ab pool mein nahi hain unhe used list se bhi hata dein taake conflict na ho
+    companies[selIdx].usedBills = companies[selIdx].usedBills.filter(b => billsArray.includes(b));
+    companies[selIdx].usedSt = companies[selIdx].usedSt.filter(s => stArray.includes(s));
+
+    await saveToCloud();
+    closePoolModal();
+    populateCompanyDropdowns();
+    renderSerialManager();
+    alert("Serial pool successfully updated and saved!");
+}
