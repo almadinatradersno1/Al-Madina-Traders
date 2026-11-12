@@ -59,13 +59,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // 2. Sidebar aur Main Dashboard ko unlock karke visible karein
-            if (sidebar) {
+          if (sidebar) {
                 sidebar.classList.remove('portal-locked');
-                sidebar.style.display = 'flex'; // Ensure block/flex display
             }
             if (mainContent) {
                 mainContent.classList.remove('portal-locked');
-                mainContent.style.display = 'block'; // Ensure it's visible
             }
 
             // 3. User email show karein
