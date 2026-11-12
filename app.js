@@ -506,3 +506,8 @@ async function saveManualPool() {
     renderSerialManager();
     alert("Serial pool successfully updated and saved!");
 }
+// Manual Save Button Function for Departments
+async function manualSaveDepartments() {
+    await saveToCloud();
+    alert("Saare departments kamyabi ke sath Firebase Cloud par save ho gaye hain! Ab page refresh karne se data nahi udega.");
+}
