@@ -51,14 +51,14 @@ auth.onAuthStateChanged((user) => {
     const emailTxt = document.getElementById('userEmailText');
 
     if (user) {
-        // User logged in: Hide landing letterhead view, unlock sidebar and dashboard
-        if (landingView) landingView.classList.add('hidden');
+        // User logged in: Hide landing background view completely
+        if (landingView) landingView.style.display = 'none'; // <-- Isay style.display = 'none' kar dein
         if (sidebar) sidebar.classList.remove('portal-locked');
         if (mainContent) mainContent.classList.remove('portal-locked');
         if (emailTxt) emailTxt.innerText = user.email;
     } else {
-        // User logged out: Show landing letterhead view, lock dashboard
-        if (landingView) landingView.classList.remove('hidden');
+        // User logged out: Show landing background view
+        if (landingView) landingView.style.display = 'block';
         if (sidebar) sidebar.classList.add('portal-locked');
         if (mainContent) mainContent.classList.add('portal-locked');
         if (emailTxt) emailTxt.innerText = '';
