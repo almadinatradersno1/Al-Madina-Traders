@@ -91,8 +91,7 @@ async function init() {
 
     document.getElementById('excelFile').addEventListener('change', handleExcelUpload);
     document.getElementById('deptExcelFile').addEventListener('change', handleDeptExcelUpload);
-    document.getElementById('serialExcelFile').addEventListener('change', handleSerialExcelUpload);
-}
+    }
 
 // Cloud Database Sync Functions
 async function saveToCloud() {
