@@ -38,10 +38,12 @@ async function logoutAdmin() {
     try {
         await auth.signOut();
         alert("Logged out successfully.");
+        location.reload(); // Logout ke baad page refresh kar dega taake login screen wapas aa jaye
     } catch (error) {
         console.error("Logout Error:", error);
     }
 }
+
 // Real-time Auth State Listener (Controls Background Letterhead View vs Dashboard)
 document.addEventListener('DOMContentLoaded', () => {
     auth.onAuthStateChanged((user) => {
