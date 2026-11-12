@@ -41,6 +41,11 @@ async function init() {
         renderAll();
     });
 
+    // Dropdown change hone par filtered serial status table render hoga
+    document.getElementById('serialManagerCompSelect').addEventListener('change', () => {
+        renderSerialManager();
+    });
+
     document.getElementById('quarterSelect').addEventListener('change', (e) => {
         currentQuarter = e.target.value;
         document.getElementById('activeQuarterBadge').innerText = `${currentQuarter} Active`;
@@ -185,10 +190,19 @@ async function addDepartment() {
     }
 }
 
+// Company filter ke sath purane style mein serials render karne wala function
 function renderSerialManager() {
     const tbody = document.getElementById('serialStatusTableBody');
     tbody.innerHTML = '';
-    companies.forEach(c => {
+    
+    const selectedCompIdx = document.getElementById('serialManagerCompSelect').value;
+
+    companies.forEach((c, idx) => {
+        // Agar dropdown se specific company select hai, toh baki companies ko skip kar dein
+        if (selectedCompIdx !== "" && idx.toString() !== selectedCompIdx) {
+            return;
+        }
+
         let billsHtml = c.billsPool.map(b => c.usedBills.includes(b) ? `<span class="text-slate-400 line-through bg-slate-100 px-1.5 py-0.5 rounded m-0.5 inline-block">${b}</span>` : `<span class="font-bold text-slate-900 bg-amber-100 px-1.5 py-0.5 rounded m-0.5 inline-block">${b}</span>`).join(' ');
         let stHtml = c.stPool.map(s => c.usedSt.includes(s) ? `<span class="text-slate-400 line-through bg-slate-100 px-1.5 py-0.5 rounded m-0.5 inline-block">${s}</span>` : `<span class="font-bold text-slate-900 bg-emerald-100 px-1.5 py-0.5 rounded m-0.5 inline-block">${s}</span>`).join(' ');
         
@@ -448,27 +462,3 @@ async function updateCompField(idx, field, val) {
 }
 
 window.onload = init;
-// 1. Dropdown change hone par table ko dobara render karein
-document.getElementById('serialManagerCompSelect').addEventListener('change', () => {
-    renderSerialStatusTable(); // Yeh function aapke serials render karta hai
-});
-
-// 2. Render function ke andar select ki hui company ka filter lagayein
-function renderSerialStatusTable() {
-    const selectedCompany = document.getElementById('serialManagerCompSelect').value;
-    const tbody = document.getElementById('serialStatusTableBody');
-    tbody.innerHTML = ''; // Table clear karein
-
-    // 'allSerialsData' aapke paas jo bhi array ya object ho jisme data save hai
-    for (let compName in allSerialsData) {
-        // Agar koi specific company select hai aur yeh woh nahi hai, toh skip kar dein
-        if (selectedCompany && selectedCompany !== "All" && compName !== selectedCompany) {
-            continue;
-        }
-
-        // Baki wahi aapka purana design (pills, frozen, bold available numbers) yahan render hoga:
-        let row = document.createElement('tr');
-        // ... aapka purana HTML row generator code ...
-        tbody.appendChild(row);
-    }
-}
