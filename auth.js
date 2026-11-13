@@ -27,9 +27,11 @@ async function loginAdmin() {
     try {
         await auth.signInWithEmailAndPassword(email, pass);
         closeAdminModal();
-        alert("Admin Login Successful!");
+        showCustomAlert("SUCCESS", "Admin login successful! Welcome to the portal dashboard.", "success", () => {
+    closeAdminModal(); 
+});
     } catch (error) {
-        alert("Login Failed: " + error.message);
+        showCustomAlert("ERROR!", "Login Failed: " + error.message, "error");
     }
 }
 
