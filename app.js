@@ -547,3 +547,25 @@ function closeCustomAlert() {
         window.customAlertCallback = null;
     }
 }
+    const taxTypeSelect = document.getElementById('taxTypeSelect');
+if (taxTypeSelect) {
+    taxTypeSelect.addEventListener('change', updateInvoiceCalculations);
+}
+const taxType = document.getElementById('taxTypeSelect') ? document.getElementById('taxTypeSelect').value : 'GST';
+const stMainTitle = document.getElementById('stMainTitle');
+
+if (taxType === 'SST') {
+    if (stMainTitle) stMainTitle.innerText = "SINDH SALES TAX INVOICE";
+    // Table headers for SST
+    document.getElementById('thColExcl').innerText = "Value Excluding Sindh Sales Tax";
+    document.getElementById('thColRate').innerText = "Rate of Sindh Sales Tax";
+    document.getElementById('thColTax').innerText = "Total Sindh Sales Tax Payable";
+    document.getElementById('thColIncl').innerText = "Value including Sindh Sales Tax";
+} else {
+    if (stMainTitle) stMainTitle.innerText = "SALES TAX INVOICE";
+    // Table headers for GST
+    document.getElementById('thColExcl').innerText = "Value Excluding Sales Tax";
+    document.getElementById('thColRate').innerText = "Rate of Sales Tax";
+    document.getElementById('thColTax').innerText = "Total Sales Tax Payable";
+    document.getElementById('thColIncl').innerText = "Value including Sales Tax";
+}
