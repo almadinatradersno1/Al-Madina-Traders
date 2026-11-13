@@ -511,3 +511,39 @@ async function manualSaveDepartments() {
     await saveToCloud();
     alert("Saare departments kamyabi ke sath Firebase Cloud par save ho gaye hain! Ab page refresh karne se data nahi udega.");
 }
+// --- Custom Modern Alert Modal Functions ---
+function showCustomAlert(title, message, type = 'success', callback = null) {
+    const modal = document.getElementById('customAlertModal');
+    const iconContainer = document.getElementById('alertIconContainer');
+    const titleEl = document.getElementById('alertTitle');
+    const msgEl = document.getElementById('alertMessage');
+    const btnEl = document.getElementById('alertBtn');
+
+    titleEl.innerText = title;
+    msgEl.innerText = message;
+
+    // Type ke hisaab se color aur icons set karna (Green for success, Red for error)
+    if (type === 'success') {
+        iconContainer.innerHTML = '✅';
+        titleEl.className = "font-black text-xl tracking-wide uppercase text-emerald-600";
+        btnEl.className = "w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl text-xs uppercase tracking-wider shadow-lg shadow-emerald-600/20 transition cursor-pointer";
+        btnEl.innerText = "Continue";
+    } else {
+        iconContainer.innerHTML = '❌';
+        titleEl.className = "font-black text-xl tracking-wide uppercase text-rose-600";
+        btnEl.className = "w-full py-3 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-2xl text-xs uppercase tracking-wider shadow-lg shadow-rose-600/20 transition cursor-pointer";
+        btnEl.innerText = "Try Again";
+    }
+
+    // Global callback save karna close hone ke liye
+    window.customAlertCallback = callback;
+    modal.classList.remove('hidden');
+}
+
+function closeCustomAlert() {
+    document.getElementById('customAlertModal').classList.add('hidden');
+    if (typeof window.customAlertCallback === 'function') {
+        window.customAlertCallback();
+        window.customAlertCallback = null;
+    }
+}
