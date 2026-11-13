@@ -35,14 +35,13 @@ async function loginAdmin() {
     }
 }
 
-// Logout Admin Function
+    // Logout Admin Function
 async function logoutAdmin() {
     try {
         await auth.signOut();
-        alert("Logged out successfully.");
-        location.reload(); // Logout ke baad page refresh kar dega taake login screen wapas aa jaye
+        showCustomAlert("SUCCESS", "Logged out successfully.", "success");
     } catch (error) {
-        console.error("Logout Error:", error);
+        showCustomAlert("ERROR!", "Logout Failed: " + error.message, "error");
     }
 }
 
